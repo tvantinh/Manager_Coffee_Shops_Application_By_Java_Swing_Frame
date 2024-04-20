@@ -35,7 +35,7 @@ public class Home {
 	private JFrame frame;
 
 	private JLabel timeLabel = new JLabel();
-	private Image img = new ImageIcon(Home.class.getResource("/img/Logo.png")).getImage().getScaledInstance(154, 80,Image.SCALE_SMOOTH);
+	private Image img = new ImageIcon(Home.class.getResource("/img/Logo.png")).getImage().getScaledInstance(137, 80,Image.SCALE_SMOOTH);
 	/**
 	 * Launch the application.
 	 */
@@ -123,7 +123,6 @@ public class Home {
 		newOrderLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Order f = new Order();
 				
 			}
 		});
@@ -158,7 +157,7 @@ public class Home {
 		logoutButton.setIcon(new ImageIcon(Home.class.getResource("/img/logout.png")));
 		logoutButton.setBackground(new Color(255, 255, 255));
 		logoutButton.setHorizontalAlignment(SwingConstants.CENTER);
-		logoutButton.setFont(new Font("Arial", Font.ITALIC, 25));
+		logoutButton.setFont(new Font("Arial", Font.ITALIC, 20));
 		logoutButton.addActionListener( new ActionListener() {
 			
 			@Override
@@ -174,14 +173,20 @@ public class Home {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
-		JPanel panel_2 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_2, null);
-		
-		JPanel panel_3 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_3, null);
-		
-		JPanel panel_4 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_4, null);
+		JPanel newOrderPanelTab = new JPanel();
+		tabbedPane.addTab("ORDER", null, newOrderPanelTab, null);
+		JPanel productsPanelTab = new JPanel();
+		tabbedPane.addTab("PRODUCTS", null, productsPanelTab, null);
+		JPanel inventoryPanelTab = new JPanel();
+		tabbedPane.addTab("INVENTORY", null, inventoryPanelTab, null);
+		JPanel promotionPanelTab = new JPanel();
+		tabbedPane.addTab("PROMOTION", null, promotionPanelTab, null);
+		JPanel statisticPanelTab = new JPanel();
+		tabbedPane.addTab("STATISTIC", null, statisticPanelTab, null);
+		JPanel employeePanelTab = new JPanel();
+		tabbedPane.addTab("EMPLOYEE", null, employeePanelTab, null);
+		JPanel accountPanelTab = new JPanel();
+		tabbedPane.addTab("ACCOUNT", null, accountPanelTab, null);
 		
 		
 		
@@ -213,4 +218,41 @@ public class Home {
 		}).start();
 		
 	}
+	
+	public JPanel newOrderPanelTab()
+	{
+		JPanel orderPanel = new JPanel();
+		return orderPanel;
+	}
+	public JPanel productsPanelTab()
+	{
+		JPanel productsPanel = new JPanel();
+		return productsPanel;
+	}
+	public JPanel inventoryPanelTab()
+	{
+		JPanel inventoryPanel = new JPanel();
+		return inventoryPanel;
+	}
+	public JPanel promotionPanelTab()
+	{
+		JPanel promotionPanel = new JPanel();
+		return promotionPanel;
+	}
+	public JPanel statisticPanelTab()
+	{
+		JPanel statisticPanel = new JPanel();
+		return statisticPanel;
+	}
+	public JPanel employeePanelTab()
+	{
+		JPanel employeePanel = new JPanel();
+		return employeePanel;
+	}
+	public JPanel accountPanelTab()
+	{
+		JPanel accountPanel = new JPanel();
+		return accountPanel;
+	}
+	
 }
