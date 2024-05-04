@@ -1,4 +1,4 @@
-package homePage;
+package Model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,17 +22,20 @@ public class DBConnect {
 			e.printStackTrace();
 		}
 	}
-	public ResultSet query(String qr)
-	{
-		try {
-			Statement stm = this.con.createStatement();
-			ResultSet rs = stm.executeQuery(qr);
-			return rs;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		
-		
+	public ResultSet query(String qr) {
+	    try {
+	        Statement stm = this.con.createStatement();
+	        ResultSet rs = stm.executeQuery(qr);
+	        return rs;
+	    } catch (SQLException e) {
+	        System.err.println("Error executing query: " + qr);
+	        e.printStackTrace();
+	        throw new RuntimeException("Error executing query: " + qr, e);
+	    }
 	}
+	/// query Product
+	
+	
+	
+	
 }

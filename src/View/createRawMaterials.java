@@ -1,4 +1,4 @@
-package homePage;
+package View;
 
 import java.awt.EventQueue;
 
