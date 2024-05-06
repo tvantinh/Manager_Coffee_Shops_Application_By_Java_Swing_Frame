@@ -39,10 +39,11 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 
 import Model.ProductTableModel;
+import Model.TypeProductTableModel;
 import Object.Product;
+import Object.TypeProduct;
 
 public class ViewMain extends JFrame {
 
@@ -88,6 +89,7 @@ public class ViewMain extends JFrame {
 	private JTextField textField_9;
 	private JTextField textField_10;
 	private ProductTableModel tableModel = new ProductTableModel();
+	private TypeProductTableModel typeProductTableProduct = new TypeProductTableModel();
 	/**
 	 * Create the application.
 	 */
@@ -310,10 +312,13 @@ public class ViewMain extends JFrame {
 	//set data table
 	public void setDataTableProduct(List<Product> tb)
 	{
-		tableModel.setdata(tb);
+		tableModel.setData(tb);
 	}
 	
-	
+	public void setDataTableTypeProduct(List<TypeProduct> tb)
+	{
+		typeProductTableProduct.setData(tb);
+	}
 	
 	public JPanel newOrderPanelTab()
 	{
@@ -496,11 +501,9 @@ public class ViewMain extends JFrame {
 		typeProductsPanel.setBorder(new TitledBorder(null, "type", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		productsPanel.add(typeProductsPanel);
-		
-		String nameColumns[] = {"ID","Type name", "",""};
-		DefaultTableModel dt = new DefaultTableModel(null ,nameColumns);
 		typeProductsPanel.setLayout(new GridLayout(0, 2, 0, 0));
-		typeProductTable = new JTable(dt);
+		
+		typeProductTable = new JTable(typeProductTableProduct);
 		JScrollPane  TypeProductTable = new JScrollPane();
 		TypeProductTable.setViewportView(typeProductTable);
 		TypeProductTable.setPreferredSize(new Dimension(0, 100));

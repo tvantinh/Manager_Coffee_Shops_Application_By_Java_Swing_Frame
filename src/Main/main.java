@@ -3,7 +3,7 @@ package Main;
 import javax.swing.SwingUtilities;
 
 import Controller.Controller;
-import Model.ProductTableModel;
+import Model.Model;
 import View.ViewMain;
 
 public class main {
@@ -12,10 +12,10 @@ public class main {
 		SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                ProductTableModel model = new ProductTableModel();
+            	Model model = new Model();
                 ViewMain view = new ViewMain();
                 Controller controller = new Controller(view,model);
-                controller.refreshData();
+                controller.refeshdata();
                 view.setVisible(true);
             }
         });
