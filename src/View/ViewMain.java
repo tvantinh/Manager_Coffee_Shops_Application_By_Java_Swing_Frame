@@ -25,6 +25,7 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -44,13 +45,20 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import Model.InventoryTableModel;
-import Model.ProductTableModel;
-import Model.TypeProductTableModel;
+
+import Object.Customer;
+import Object.Employee;
 import Object.Inventory;
 import Object.Order;
 import Object.Product;
+import Object.TypeInventory;
 import Object.TypeProduct;
+import TableModel.CustomerTableModel;
+import TableModel.EmployeeTableModel;
+import TableModel.InventoryTableModel;
+import TableModel.ProductTableModel;
+import TableModel.TypeInventoryTableModel;
+import TableModel.TypeProductTableModel;
 import ViewHelper.ActionPane;
 import ViewHelper.ActionPaneRenderer;
 import ViewHelper.ButtonEditor;
@@ -70,6 +78,8 @@ public class ViewMain extends JFrame {
 			Image.SCALE_SMOOTH);
 	private Image findImg = new ImageIcon(ViewMain.class.getResource("/img/loupe.png")).getImage().getScaledInstance(24,
 			24, Image.SCALE_SMOOTH);
+	private Image avataDemo =new ImageIcon(ViewMain.class.getResource("/img/avataDemo.jpg")).getImage().getScaledInstance(68,
+			109, Image.SCALE_SMOOTH);
 	private JTable table_1;
 	private JTextField searchTypeProductTextField;
 	private JTextField searchTypeInventoryTextField;
@@ -103,10 +113,16 @@ public class ViewMain extends JFrame {
 	private JLabel totalLabel;
 	private JTable productTable;
 	private JTable typeProductTable;
-	private JTable invetoryTable;
+	private JTable inventoryTable;
+	private JTable typeInventoryTable;
+	private JTable employeeTable;
+	private JTable customerTable;
 	private ProductTableModel tableModel = new ProductTableModel();
 	private TypeProductTableModel typeProductTableModel = new TypeProductTableModel();
 	private InventoryTableModel inventoryTableModel = new InventoryTableModel();
+	private TypeInventoryTableModel typeInventoryTableModel = new TypeInventoryTableModel();
+	private EmployeeTableModel employeeTableModel = new EmployeeTableModel();
+	private CustomerTableModel customerTableModel = new CustomerTableModel();
 	private JTabbedPane productsTabed = new JTabbedPane(JTabbedPane.BOTTOM);
 	private List<Order> listOrder = new ArrayList<>();
 	private JTable table;
@@ -333,6 +349,16 @@ public class ViewMain extends JFrame {
 		inventoryTableModel.setData(tb);
 	}
 
+	public void setDataTableTypeInventory(List<TypeInventory> tb) {
+		typeInventoryTableModel.setData(tb);
+	}
+	public void setDataTableEmployee(List<Employee> tb) {
+		employeeTableModel.setData(tb);
+	}
+	public void setDataTableCustomer(List<Customer> tb) {
+		customerTableModel.setData(tb);
+	}
+	
 	// load data list Product in Panel
 	public void loadPanelOrder(List<TypeProduct> listType, List<Product> listProduct) {
 		for (var i : listType) {
@@ -839,9 +865,9 @@ public class ViewMain extends JFrame {
 		inventoryPanel.add(typeInventoryPanel);
 		typeInventoryPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
-		invetoryTable = new JTable(inventoryTableModel);
+		typeInventoryTable = new JTable(typeInventoryTableModel);
 		JScrollPane sc = new JScrollPane();
-		sc.setViewportView(invetoryTable);
+		sc.setViewportView(typeInventoryTable);
 
 		sc.setPreferredSize(new Dimension(0, 100));
 		typeInventoryPanel.add(sc);
@@ -912,12 +938,10 @@ public class ViewMain extends JFrame {
 		InventoryPanel.setPreferredSize(new Dimension(0, 300));
 		inventoryPanel.add(InventoryPanel);
 
-		table_2 = new JTable();
-		String nameProductsColumns[] = { "ID", "Product name", "Unit", "Price", "describe", "", "" };
-		DefaultTableModel dt2 = new DefaultTableModel(null, nameProductsColumns);
 		InventoryPanel.setLayout(new GridLayout(0, 2, 0, 0));
-		table_2 = new JTable(dt2);
-		JScrollPane sc2 = new JScrollPane(table_2);
+		inventoryTable = new JTable(inventoryTableModel);
+		JScrollPane sc2 = new JScrollPane();
+		sc2.setViewportView(inventoryTable);
 		sc2.setPreferredSize(new Dimension(0, 150));
 		InventoryPanel.add(sc2);
 
@@ -1243,135 +1267,126 @@ public class ViewMain extends JFrame {
 
 		JPanel findEmployee = new JPanel();
 		findEmployee.setBorder(null);
-		findEmployee.setPreferredSize(new Dimension(0, 200));
+		findEmployee.setPreferredSize(new Dimension(0, 400));
 		employeePanel.add(findEmployee);
-		findEmployee.setLayout(new GridLayout(0, 2, 0, 0));
+		findEmployee.setLayout(new BoxLayout(findEmployee, BoxLayout.X_AXIS));
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
-				"FIND & ADD", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+				"FIND", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		findEmployee.add(panel);
 
 		JLabel lblNewLabel = new JLabel("Name:");
+		lblNewLabel.setBounds(16, 39, 45, 18);
 		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
 
 		JLabel lblNewLabel_1 = new JLabel("Phone  number:");
+		lblNewLabel_1.setBounds(16, 79, 100, 18);
 		lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
 
 		textField_3 = new JTextField();
+		textField_3.setBounds(126, 79, 236, 20);
 		textField_3.setColumns(10);
 
 		textField_4 = new JTextField();
+		textField_4.setBounds(126, 39, 236, 20);
 		textField_4.setColumns(10);
 
 		JButton btnNewButton = new JButton("Find");
+		btnNewButton.setBounds(372, 38, 98, 23);
 		btnNewButton.setBackground(new Color(255, 255, 255));
 
 		JButton btnNewButton_1 = new JButton("Reset");
+		btnNewButton_1.setBounds(372, 78, 98, 23);
 		btnNewButton_1.setBackground(new Color(255, 255, 255));
-
-		JButton btnNewButton_2 = new JButton("Add");
-		btnNewButton_2.setBackground(new Color(255, 255, 255));
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup().addContainerGap()
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING).addComponent(lblNewLabel_1)
-								.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-								.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
-						.addGap(341)));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(gl_panel
-				.createSequentialGroup().addGap(22)
-				.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(lblNewLabel)
-						.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton).addComponent(btnNewButton_2))
-				.addGap(64)
-				.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(lblNewLabel_1)
-						.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton_1))
-				.addContainerGap(49, Short.MAX_VALUE)));
-		panel.setLayout(gl_panel);
+		panel.setLayout(null);
+		panel.add(lblNewLabel_1);
+		panel.add(lblNewLabel);
+		panel.add(textField_3);
+		panel.add(textField_4);
+		panel.add(btnNewButton_1);
+		panel.add(btnNewButton);
 
 		JPanel panel_1 = new JPanel();
+		panel_1.setPreferredSize(new Dimension(220, 0));
 		panel_1.setBorder(new TitledBorder(null, "UPDATE", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		findEmployee.add(panel_1);
 		panel_1.setLayout(null);
 
 		JButton btnNewButton_3 = new JButton("Update");
-		btnNewButton_3.setBounds(515, 159, 85, 21);
+		btnNewButton_3.setBounds(567, 168, 85, 21);
 		panel_1.add(btnNewButton_3);
 
 		JLabel lblNewLabel_2 = new JLabel("ID:");
 		lblNewLabel_2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 13));
-		lblNewLabel_2.setBounds(10, 28, 45, 13);
+		lblNewLabel_2.setBounds(88, 28, 45, 13);
 		panel_1.add(lblNewLabel_2);
 
 		JLabel lblNewLabel_3 = new JLabel("Name:");
 		lblNewLabel_3.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 13));
-		lblNewLabel_3.setBounds(10, 82, 45, 13);
+		lblNewLabel_3.setBounds(88, 82, 45, 13);
 		panel_1.add(lblNewLabel_3);
 
 		JLabel lblNewLabel_4 = new JLabel("Date of birth:");
 		lblNewLabel_4.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 13));
-		lblNewLabel_4.setBounds(10, 124, 79, 13);
+		lblNewLabel_4.setBounds(88, 124, 79, 13);
 		panel_1.add(lblNewLabel_4);
 
 		JLabel lblNewLabel_5 = new JLabel("Phone number:");
 		lblNewLabel_5.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 13));
-		lblNewLabel_5.setBounds(326, 28, 91, 13);
+		lblNewLabel_5.setBounds(378, 28, 91, 13);
 		panel_1.add(lblNewLabel_5);
 
 		JLabel lblNewLabel_6 = new JLabel("CCCD:");
 		lblNewLabel_6.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 13));
-		lblNewLabel_6.setBounds(326, 82, 45, 13);
+		lblNewLabel_6.setBounds(378, 82, 45, 13);
 		panel_1.add(lblNewLabel_6);
 
 		JLabel lblNewLabel_7 = new JLabel("Position:");
 		lblNewLabel_7.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 13));
-		lblNewLabel_7.setBounds(326, 124, 56, 13);
+		lblNewLabel_7.setBounds(378, 124, 56, 13);
 		panel_1.add(lblNewLabel_7);
 
 		textField_5 = new JTextField();
-		textField_5.setBounds(99, 118, 184, 19);
+		textField_5.setBounds(177, 120, 184, 19);
 		panel_1.add(textField_5);
 		textField_5.setColumns(10);
 
 		textField_6 = new JTextField();
 		textField_6.setColumns(10);
-		textField_6.setBounds(99, 69, 184, 19);
+		textField_6.setBounds(177, 78, 184, 19);
 		panel_1.add(textField_6);
 
 		textField_7 = new JTextField();
 		textField_7.setColumns(10);
-		textField_7.setBounds(99, 25, 184, 19);
+		textField_7.setBounds(177, 24, 184, 19);
 		panel_1.add(textField_7);
 
 		textField_8 = new JTextField();
 		textField_8.setColumns(10);
-		textField_8.setBounds(427, 21, 173, 19);
+		textField_8.setBounds(479, 24, 173, 19);
 		panel_1.add(textField_8);
 
 		textField_9 = new JTextField();
 		textField_9.setColumns(10);
-		textField_9.setBounds(427, 75, 173, 19);
+		textField_9.setBounds(479, 78, 173, 19);
 		panel_1.add(textField_9);
 
 		textField_10 = new JTextField();
 		textField_10.setColumns(10);
-		textField_10.setBounds(427, 122, 173, 19);
+		textField_10.setBounds(479, 120, 173, 19);
 		panel_1.add(textField_10);
+		
+		JLabel lblNewLabel_8 = new JLabel("");
+		lblNewLabel_8.setIcon(new ImageIcon(avataDemo));
+		lblNewLabel_8.setBounds(10, 28, 68, 109);
+		panel_1.add(lblNewLabel_8);
+		
+				JButton btnNewButton_2 = new JButton("Add");
+				btnNewButton_2.setBounds(12, 167, 66, 23);
+				panel_1.add(btnNewButton_2);
+				btnNewButton_2.setBackground(new Color(255, 255, 255));
 
 		JPanel employeeList = new JPanel();
 		employeeList.setBorder(
@@ -1379,21 +1394,13 @@ public class ViewMain extends JFrame {
 		employeeList.setPreferredSize(new Dimension(0, 650));
 		employeePanel.add(employeeList);
 		employeeList.setLayout(new GridLayout(1, 0, 0, 0));
-
+		
+		employeeTable = new JTable(employeeTableModel);
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(employeeTable);
 		employeeList.add(scrollPane);
 
-		table_2 = new JTable();
-		scrollPane.setViewportView(table_2);
-		table_2.setModel(new DefaultTableModel(
-				new Object[][] { { null, null, null, null }, { null, null, null, null }, { null, null, null, null }, },
-				new String[] { "Name", "Date of birth", "Position", "Starting date" }) {
-			boolean[] columnEditables = new boolean[] { false, false, false, false };
-
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+		
 
 		return employeePanel;
 	}
@@ -1537,23 +1544,8 @@ public class ViewMain extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		employeeList.add(scrollPane);
 
-		table_2 = new JTable();
-		scrollPane.setViewportView(table_2);
-		table_2.setModel(new DefaultTableModel(
-				new Object[][] { { null, null, null, null, null }, { null, null, null, null, null },
-						{ null, null, null, null, null }, },
-				new String[] { "Name", "Sex", "Phone number", "Address", "Email" }) {
-			boolean[] columnEditables = new boolean[] { false, false, false, false, false };
-
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		table_2.getColumnModel().getColumn(0).setPreferredWidth(150);
-		table_2.getColumnModel().getColumn(1).setPreferredWidth(15);
-		table_2.getColumnModel().getColumn(2).setPreferredWidth(80);
-		table_2.getColumnModel().getColumn(3).setPreferredWidth(90);
-		table_2.getColumnModel().getColumn(4).setPreferredWidth(100);
+		customerTable = new JTable(customerTableModel);
+		scrollPane.setViewportView(customerTable);
 		return customerPanel;
 	}
 

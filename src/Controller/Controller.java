@@ -6,11 +6,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 import Model.Model;
+import Object.Customer;
+import Object.Employee;
 import Object.Inventory;
-import Object.Order;
 import Object.Product;
+import Object.TypeInventory;
 import Object.TypeProduct;
-import View.EditOrder;
 import View.ViewMain;
 
 public class Controller implements PropertyChangeListener{
@@ -39,7 +40,12 @@ public class Controller implements PropertyChangeListener{
 			
 			List<Inventory> listInventory = Model.getDataInventory();
 			App.setDataTableInventory(listInventory);
-			
+			List<TypeInventory> listTypeInventory = Model.getDataTypeInventory();
+			App.setDataTableTypeInventory(listTypeInventory);
+			List<Employee> listEmployee = Model.getDataEmployee();
+			App.setDataTableEmployee(listEmployee);
+			List<Customer> listCustomer = Model.getDataCustomer();
+			App.setDataTableCustomer(listCustomer);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

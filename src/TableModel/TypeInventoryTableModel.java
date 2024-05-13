@@ -1,37 +1,33 @@
-package Model;
-
+package TableModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Object.TypeProduct;
+import Object.TypeInventory;
 
-public class TypeProductTableModel extends AbstractTableModel {
 
-	/**
-	 * 
-	 */
+public class TypeInventoryTableModel extends AbstractTableModel{
 	private static final long serialVersionUID = 1L;
-	protected static String[] COLUMN_NAMES = {"ID","Name type","",""};
-	List<TypeProduct> listTypeProduct = new ArrayList<>();
-	public TypeProductTableModel()
+	protected static String[] COLUMN_NAMES = {"ID","Name type",""};
+	List<TypeInventory> listTypeInventory = new ArrayList<>();
+	public TypeInventoryTableModel()
 	{
 		
 	}
 	
 	
-	public void setData(List<TypeProduct> list)
+	public void setData(List<TypeInventory> list)
 	{
-		listTypeProduct = list;
+		listTypeInventory = list;
 		fireTableDataChanged();
 	}
 	
 	@Override
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return listTypeProduct.size();
+		return listTypeInventory.size();
 	}
 
 	@Override
@@ -43,7 +39,7 @@ public class TypeProductTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
-		TypeProduct tpd = listTypeProduct.get(rowIndex);
+		TypeInventory tpd = listTypeInventory.get(rowIndex);
 		switch(columnIndex)
 		{
 			case 0:

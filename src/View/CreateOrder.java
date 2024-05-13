@@ -24,6 +24,10 @@ import java.awt.event.ActionEvent;
 
 public class CreateOrder extends JFrame{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField quanlityOrder;
 	public boolean State;
 	private JRadioButton sizeM;
