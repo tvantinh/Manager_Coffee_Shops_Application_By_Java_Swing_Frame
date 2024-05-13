@@ -11,13 +11,17 @@ public class ProductTableModel extends AbstractTableModel{
 	private static final long serialVersionUID = 1L;
 	protected static String[] COLUMN_NAMES = {"ID","Product name","Unit" ,"Price","describe","",""};
 	List<Product> listProduct = new ArrayList<>();
-	public List<Product> getListProduct() {
-		return listProduct;
-	}
+	
+	
 	public ProductTableModel()
 	{
 
 	}
+	
+	public List<Product> getListProduct() {
+		return listProduct;
+	}
+	
 	
 	public void setData(List<Product> products)
 	{
@@ -32,6 +36,10 @@ public class ProductTableModel extends AbstractTableModel{
 	public int getColumnCount() {
 		return COLUMN_NAMES.length;
 	}
+	@Override
+    public String getColumnName(int column) {
+        return COLUMN_NAMES[column];
+    }
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Product pd = listProduct.get(rowIndex);
@@ -52,12 +60,4 @@ public class ProductTableModel extends AbstractTableModel{
             return null;
             }
 	}
-		@Override
-        public String getColumnName(int column) {
-            return COLUMN_NAMES[column];
-        }
-	
-	
-	
-	
 }

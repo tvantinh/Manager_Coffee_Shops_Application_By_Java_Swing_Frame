@@ -6,8 +6,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 import Model.Model;
+import Object.Inventory;
+import Object.Order;
 import Object.Product;
 import Object.TypeProduct;
+import View.EditOrder;
 import View.ViewMain;
 
 public class Controller implements PropertyChangeListener{
@@ -23,9 +26,21 @@ public class Controller implements PropertyChangeListener{
 	{
 		try {
 			List<Product> listProduct = Model.getDataProduct();
+			App.setDataTableProduct(listProduct);
+			
+			///liên quan đến type product
 			List<TypeProduct> listTypeProduct = Model.getDataTypeProduct();
 			App.setDataTableTypeProduct(listTypeProduct);
-			App.setDataTableProduct(listProduct);
+			//=>hiển thị các loại tương ứng trong new order
+			App.loadPanelOrder(listTypeProduct, listProduct);
+			
+			
+			
+			
+			List<Inventory> listInventory = Model.getDataInventory();
+			App.setDataTableInventory(listInventory);
+			
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

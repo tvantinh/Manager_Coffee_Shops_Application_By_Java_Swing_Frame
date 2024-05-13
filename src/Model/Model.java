@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import Object.Inventory;
 import Object.Product;
 import Object.TypeProduct;
 
@@ -12,6 +13,7 @@ public class Model {
 
 	public ProductTableModel productModel = new ProductTableModel();
 	public TypeProductTableModel typeProductModel = new TypeProductTableModel();
+	public InventoryTableModel InventoryModel = new InventoryTableModel();
 	DBConnect db = new DBConnect();
 	
 	
@@ -44,5 +46,18 @@ public class Model {
 			listTypeProduct.add(tp);
 		}
 		return listTypeProduct;
+	}
+	public List<Inventory> getDataInventory() throws SQLException
+	{
+		String getListInventory = "select * from NguyenLieu";
+		ResultSet rs = db.query(getListInventory);
+		List<Inventory> listInventory = new ArrayList<>();
+		while(rs.next())
+		{
+			Inventory IV = new Inventory(rs.getString(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getString(5),rs.getInt(6),rs.getString(7));
+			listInventory.add(IV);
+		}
+		return listInventory;
+		
 	}
 }
