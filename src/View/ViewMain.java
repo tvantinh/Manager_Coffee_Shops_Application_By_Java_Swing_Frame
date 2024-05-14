@@ -51,18 +51,23 @@ import Object.Employee;
 import Object.Inventory;
 import Object.Order;
 import Object.Product;
+import Object.Promotion;
 import Object.TypeInventory;
 import Object.TypeProduct;
 import TableModel.CustomerTableModel;
 import TableModel.EmployeeTableModel;
 import TableModel.InventoryTableModel;
 import TableModel.ProductTableModel;
+import TableModel.PromotionTableModel;
 import TableModel.TypeInventoryTableModel;
 import TableModel.TypeProductTableModel;
 import ViewHelper.ActionPane;
 import ViewHelper.ActionPaneRenderer;
 import ViewHelper.ButtonEditor;
 import ViewHelper.TableActionEvent;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import javax.swing.JMenuItem;
 
 public class ViewMain extends JFrame {
 
@@ -80,7 +85,6 @@ public class ViewMain extends JFrame {
 			24, Image.SCALE_SMOOTH);
 	private Image avataDemo =new ImageIcon(ViewMain.class.getResource("/img/avataDemo.jpg")).getImage().getScaledInstance(68,
 			109, Image.SCALE_SMOOTH);
-	private JTable table_1;
 	private JTextField searchTypeProductTextField;
 	private JTextField searchTypeInventoryTextField;
 	private JTextField IDTypeProductTextField;
@@ -117,18 +121,26 @@ public class ViewMain extends JFrame {
 	private JTable typeInventoryTable;
 	private JTable employeeTable;
 	private JTable customerTable;
+	private JTable promotionTable;
+	
 	private ProductTableModel tableModel = new ProductTableModel();
 	private TypeProductTableModel typeProductTableModel = new TypeProductTableModel();
 	private InventoryTableModel inventoryTableModel = new InventoryTableModel();
 	private TypeInventoryTableModel typeInventoryTableModel = new TypeInventoryTableModel();
 	private EmployeeTableModel employeeTableModel = new EmployeeTableModel();
 	private CustomerTableModel customerTableModel = new CustomerTableModel();
+	private PromotionTableModel promotionTableModel = new PromotionTableModel();
 	private JTabbedPane productsTabed = new JTabbedPane(JTabbedPane.BOTTOM);
 	private List<Order> listOrder = new ArrayList<>();
 	private JTable table;
 	private JTable tableOrder;
 
 	private DefaultTableModel model = new DefaultTableModel();
+	private JTextField textField_11;
+	private JTextField textField_12;
+	private JTextField textField_13;
+	private JTextField textField_14;
+	private JTextField textField_15;
 
 	/**
 	 * Create the application.
@@ -358,7 +370,9 @@ public class ViewMain extends JFrame {
 	public void setDataTableCustomer(List<Customer> tb) {
 		customerTableModel.setData(tb);
 	}
-	
+	public void setDataTablePromotion(List<Promotion> tb) {
+		promotionTableModel.setData(tb);
+	}
 	// load data list Product in Panel
 	public void loadPanelOrder(List<TypeProduct> listType, List<Product> listProduct) {
 		for (var i : listType) {
@@ -1042,6 +1056,7 @@ public class ViewMain extends JFrame {
 		JPanel promotionPanel = new JPanel();
 		promotionPanel.setLayout(new GridLayout(0, 2, 0, 0));
 		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(null, "new promotion", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		promotionPanel.add(panel_2);
 
 		JLabel lblNewLabel = new JLabel("Mã khuyến mãi:");
@@ -1136,122 +1151,107 @@ public class ViewMain extends JFrame {
 
 		JPanel panel_3 = new JPanel();
 		promotionPanel.add(panel_3);
-		panel_3.setLayout(new GridLayout(2, 0, 0, 0));
+		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.Y_AXIS));
 
 		JPanel panel_5 = new JPanel();
+		panel_5.setBorder(new TitledBorder(null, "List promotion", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_3.add(panel_5);
 
 		JLabel lblNewLabel_5 = new JLabel("Tìm khuyến mãi");
+		lblNewLabel_5.setBounds(52, 30, 115, 20);
 		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
 		JLabel lblNewLabel_5_1 = new JLabel("Trạng thái");
+		lblNewLabel_5_1.setBounds(361, 30, 86, 20);
 		lblNewLabel_5_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
-		table = new JTable();
+		JScrollPane sc = new JScrollPane();
+		sc.setBounds(52, 90, 487, 180);
+		
+		JPopupMenu popupMenu = new JPopupMenu();
+		addPopup(sc, popupMenu);
+		promotionTable = new JTable(promotionTableModel);
+		sc.setViewportView(promotionTable);
 
 		textField_5 = new JTextField();
+		textField_5.setBounds(52, 52, 179, 27);
 		textField_5.setColumns(10);
 
 		JButton btnNewButton_1_1_1 = new JButton("Tìm\r\n");
+		btnNewButton_1_1_1.setBounds(241, 49, 89, 29);
 		btnNewButton_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
 		JComboBox comboBox = new JComboBox();
-		GroupLayout gl_panel_5 = new GroupLayout(panel_5);
-		gl_panel_5.setHorizontalGroup(gl_panel_5.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_5
-				.createSequentialGroup().addGap(52)
-				.addGroup(gl_panel_5.createParallelGroup(Alignment.LEADING)
-						.addComponent(table, GroupLayout.PREFERRED_SIZE, 595, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_panel_5.createSequentialGroup().addGroup(gl_panel_5
-								.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_panel_5.createSequentialGroup().addComponent(lblNewLabel_5).addGap(75))
-								.addGroup(gl_panel_5.createSequentialGroup()
-										.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, 179,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.UNRELATED)))
-								.addComponent(
-										btnNewButton_1_1_1, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-								.addGap(60)
-								.addGroup(gl_panel_5.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblNewLabel_5_1, GroupLayout.PREFERRED_SIZE, 86,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 178,
-												GroupLayout.PREFERRED_SIZE))))
-				.addContainerGap(45, Short.MAX_VALUE)));
-		gl_panel_5.setVerticalGroup(gl_panel_5.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_5
-				.createSequentialGroup().addGap(30)
-				.addGroup(gl_panel_5.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_5.createSequentialGroup().addComponent(lblNewLabel_5).addGap(18)
-								.addGroup(gl_panel_5.createParallelGroup(Alignment.BASELINE)
-										.addComponent(btnNewButton_1_1_1, GroupLayout.PREFERRED_SIZE, 29,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, 27,
-												GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_panel_5.createSequentialGroup().addComponent(lblNewLabel_5_1).addGap(18)
-								.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)))
-				.addPreferredGap(ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-				.addComponent(table, GroupLayout.PREFERRED_SIZE, 206, GroupLayout.PREFERRED_SIZE).addGap(23)));
-		panel_5.setLayout(gl_panel_5);
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Đang hoạt động", "Không hoạt động"}));
+		comboBox.setBounds(361, 52, 178, 27);
+		panel_5.setLayout(null);
+		panel_5.add(sc);
+		panel_5.add(lblNewLabel_5);
+		panel_5.add(textField_5);
+		panel_5.add(btnNewButton_1_1_1);
+		panel_5.add(lblNewLabel_5_1);
+		panel_5.add(comboBox);
 
-		JPanel panel_4 = new JPanel();
-		panel_3.add(panel_4);
-
-		JLabel lblNewLabel_5_2 = new JLabel("Tìm khuyến mãi");
-		lblNewLabel_5_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-
-		JButton btnNewButton_1_1_1_1 = new JButton("Tìm\r\n");
-		btnNewButton_1_1_1_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton_1_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-
-		JLabel lblNewLabel_5_1_1 = new JLabel("Trạng thái");
-		lblNewLabel_5_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-
-		JComboBox comboBox_1 = new JComboBox();
-
-		table_1 = new JTable();
-		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
-		gl_panel_4.setHorizontalGroup(gl_panel_4.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_4
-				.createSequentialGroup().addGap(54)
-				.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-						.addComponent(table_1, GroupLayout.PREFERRED_SIZE, 595, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_panel_4.createSequentialGroup()
-								.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_panel_4.createSequentialGroup()
-												.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, 179,
-														GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addComponent(btnNewButton_1_1_1_1, GroupLayout.PREFERRED_SIZE, 89,
-														GroupLayout.PREFERRED_SIZE))
-										.addComponent(lblNewLabel_5_2))
-								.addGap(60)
-								.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-										.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, 179,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_5_1_1, GroupLayout.PREFERRED_SIZE, 89,
-												GroupLayout.PREFERRED_SIZE))))
-				.addGap(43)));
-		gl_panel_4.setVerticalGroup(gl_panel_4.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_4
-				.createSequentialGroup().addContainerGap(32, Short.MAX_VALUE)
-				.addGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING, false).addGroup(gl_panel_4
-						.createSequentialGroup().addComponent(lblNewLabel_5_2)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
-								.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnNewButton_1_1_1_1, GroupLayout.PREFERRED_SIZE, 29,
-										GroupLayout.PREFERRED_SIZE)
-								.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-						.addGap(18))
-						.addGroup(gl_panel_4.createSequentialGroup()
-								.addComponent(lblNewLabel_5_1_1, GroupLayout.PREFERRED_SIZE, 20,
-										GroupLayout.PREFERRED_SIZE)
-								.addGap(59)))
-				.addComponent(table_1, GroupLayout.PREFERRED_SIZE, 206, GroupLayout.PREFERRED_SIZE).addGap(42)));
-		panel_4.setLayout(gl_panel_4);
+		
+		JPanel panel_1_1 = new JPanel();
+		panel_1_1.setLayout(null);
+		panel_1_1.setBorder(new TitledBorder(null, "Update", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_1_1.setBounds(26, 39, 575, 200);
+		panel_3.add(panel_1_1);
+		
+		JButton btnNewButton_2_1 = new JButton("update");
+		btnNewButton_2_1.setBounds(473, 214, 89, 23);
+		panel_1_1.add(btnNewButton_2_1);
+		
+		JLabel lblNewLabel_18_1 = new JLabel("ID Promotion :");
+		lblNewLabel_18_1.setBounds(33, 62, 77, 14);
+		panel_1_1.add(lblNewLabel_18_1);
+		
+		JLabel lblNewLabel_19_1 = new JLabel("Content  Promotion :");
+		lblNewLabel_19_1.setBounds(33, 93, 106, 14);
+		panel_1_1.add(lblNewLabel_19_1);
+		
+		textField_11 = new JTextField();
+		textField_11.setEnabled(false);
+		textField_11.setColumns(10);
+		textField_11.setBounds(191, 59, 371, 20);
+		panel_1_1.add(textField_11);
+		
+		textField_12 = new JTextField();
+		textField_12.setColumns(10);
+		textField_12.setBounds(191, 90, 371, 20);
+		panel_1_1.add(textField_12);
+		
+		JLabel lblNewLabel_19_1_1 = new JLabel("Discount : (%)");
+		lblNewLabel_19_1_1.setBounds(33, 124, 77, 14);
+		panel_1_1.add(lblNewLabel_19_1_1);
+		
+		textField_13 = new JTextField();
+		textField_13.setColumns(10);
+		textField_13.setBounds(191, 152, 371, 20);
+		panel_1_1.add(textField_13);
+		
+		JLabel lblNewLabel_19_1_2 = new JLabel("Day Start :");
+		lblNewLabel_19_1_2.setBounds(33, 155, 77, 14);
+		panel_1_1.add(lblNewLabel_19_1_2);
+		
+		JLabel lblNewLabel_19_1_3 = new JLabel("Day End :");
+		lblNewLabel_19_1_3.setBounds(33, 186, 67, 14);
+		panel_1_1.add(lblNewLabel_19_1_3);
+		
+		JButton btnNewButton_2_1_1 = new JButton("delete");
+		btnNewButton_2_1_1.setBounds(361, 214, 89, 23);
+		panel_1_1.add(btnNewButton_2_1_1);
+		
+		textField_14 = new JTextField();
+		textField_14.setColumns(10);
+		textField_14.setBounds(191, 121, 371, 20);
+		panel_1_1.add(textField_14);
+		
+		textField_15 = new JTextField();
+		textField_15.setColumns(10);
+		textField_15.setBounds(191, 183, 371, 20);
+		panel_1_1.add(textField_15);
 		return promotionPanel;
 	}
 
@@ -1640,5 +1640,22 @@ public class ViewMain extends JFrame {
 						.addGap(78).addComponent(btnNewButton).addGap(228)));
 		accountPanel.setLayout(gl_accountPanelTab);
 		return accountPanel;
+	}
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
 	}
 }

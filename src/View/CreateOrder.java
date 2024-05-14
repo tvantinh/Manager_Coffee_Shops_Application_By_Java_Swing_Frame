@@ -19,6 +19,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
+import javax.swing.JRootPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -77,6 +79,7 @@ public class CreateOrder extends JFrame{
 		this.setBounds(100, 100, 503, 300);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(new BorderLayout(0, 0));
+
 		this.setVisible(true);
 		JPanel panel = new JPanel();
 		this.getContentPane().add(panel, BorderLayout.NORTH);

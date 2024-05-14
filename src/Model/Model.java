@@ -9,6 +9,7 @@ import Object.Customer;
 import Object.Employee;
 import Object.Inventory;
 import Object.Product;
+import Object.Promotion;
 import Object.TypeInventory;
 import Object.TypeProduct;
 import TableModel.InventoryTableModel;
@@ -101,5 +102,17 @@ public class Model {
 			listCustomer.add(tp);
 		}
 		return listCustomer;
+	}
+	public List<Promotion> getDataPromotion() throws SQLException
+	{
+		String str = "select * from KhuyenMai";
+		ResultSet rs = db.query(str);
+		List<Promotion> listPromotion = new ArrayList<>();
+		while(rs.next())
+		{
+			Promotion tp = new Promotion(rs.getString(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5));
+			listPromotion.add(tp);
+		}
+		return listPromotion;
 	}
 }

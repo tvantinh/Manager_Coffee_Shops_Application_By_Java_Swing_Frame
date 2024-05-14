@@ -10,6 +10,7 @@ import Object.Customer;
 import Object.Employee;
 import Object.Inventory;
 import Object.Product;
+import Object.Promotion;
 import Object.TypeInventory;
 import Object.TypeProduct;
 import View.ViewMain;
@@ -46,6 +47,8 @@ public class Controller implements PropertyChangeListener{
 			App.setDataTableEmployee(listEmployee);
 			List<Customer> listCustomer = Model.getDataCustomer();
 			App.setDataTableCustomer(listCustomer);
+			List<Promotion> listPromotion = Model.getDataPromotion();
+			App.setDataTablePromotion(listPromotion);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
