@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,7 +92,6 @@ public class ViewMain extends JFrame {
 	private JTextField IDTypeInventoryTextField;
 	private JTextField nameTypeProductTextField;
 	private JTextField nameTypeInventoryTextField;
-	private JTable table_2;
 	private JTextField searchProductTextField;
 	private JTextField searchInventoryTextField;
 	private JTextField IDProductTextField;
@@ -111,6 +111,7 @@ public class ViewMain extends JFrame {
 	private JTextField textField_8;
 	private JTextField textField_9;
 	private JTextField textField_10;
+	Promotion promotion = new Promotion();
 	private JLabel castLabel;
 	private JLabel discountLabel;
 	private JLabel VATLabel;
@@ -132,7 +133,6 @@ public class ViewMain extends JFrame {
 	private PromotionTableModel promotionTableModel = new PromotionTableModel();
 	private JTabbedPane productsTabed = new JTabbedPane(JTabbedPane.BOTTOM);
 	private List<Order> listOrder = new ArrayList<>();
-	private JTable table;
 	private JTable tableOrder;
 
 	private DefaultTableModel model = new DefaultTableModel();
@@ -422,6 +422,7 @@ public class ViewMain extends JFrame {
 		}
 	}
 
+	
 	public void addProductToOrder(Order od, boolean flag) {
 		//flag is true == update
 		//flag is false == new order
@@ -459,44 +460,14 @@ public class ViewMain extends JFrame {
 				dataRow.add(od.getGhichu());
 				dataRow.add(od.getGiaBan());
 				ActionPane Pane = new ActionPane();
-				dataRow.add(Pane);
-				
-				// create 2 button action  and listener click component
-				TableActionEvent event = new TableActionEvent() {
-					@Override
-					public void onEdit(int row) {
-						EditOrder edv = new EditOrder(listOrder.get(row));
-						edv.addWindowListener(new WindowAdapter() {
-							public void windowClosed(WindowEvent e) {
-								Order editedOrder = edv.getOrder();
-								if(edv.State == true)
-								{
-									addProductToOrder(editedOrder, true);
-									updatetotal();
-								}
-							}
-						});
-					}
-
-					@Override
-					public void onDelete(int row) {
-						System.out.println("cot + " +row);
-						listOrder.remove(row);
-						model.removeRow(row);
-						updatetotal();
-						for (var il : listOrder) {
-							System.out.println(il.toString());
-						}
-					}
-				};
-
-				//assgisn
-				
-				tableOrder.getColumnModel().getColumn(5).setCellRenderer(new ActionPaneRenderer());// show action Pane
-				tableOrder.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(event));
+				dataRow.add(Pane);				
 				model.addRow(dataRow);
+				ActionPanel(tableOrder,5);
 			}
+			
+			
 		}
+		
 		for (var il : listOrder) {
 			System.out.println(il.toString());
 		}
@@ -504,7 +475,45 @@ public class ViewMain extends JFrame {
 		tableOrder.setModel(model);
 	}
 
-	public int getCast(List<Order> list)
+	
+	public void ActionPanel(JTable table, int column)
+	{
+		// create 2 button action  and listener click component
+		TableActionEvent event = new TableActionEvent() {
+			@Override
+			public void onEdit(int row) {
+				EditOrder edv = new EditOrder(listOrder.get(row));
+				edv.addWindowListener(new WindowAdapter() {
+					public void windowClosed(WindowEvent e) {
+						Order editedOrder = edv.getOrder();
+						if(edv.State == true)
+						{
+							addProductToOrder(editedOrder, true);
+							updatetotal();
+						}
+					}
+				});
+			}
+
+			@Override
+			public void onDelete(int row) {
+				System.out.println("cot + " +row);
+				listOrder.remove(row);
+				model.removeRow(row);
+				updatetotal();
+				
+				for (var il : listOrder) {
+					System.out.println(il.toString());
+				}
+			}
+		};
+		table.getColumnModel().getColumn(column).setCellRenderer(new ActionPaneRenderer());// show action Pane
+		table.getColumnModel().getColumn(column).setCellEditor(new ButtonEditor(event));
+	}
+	
+	
+	
+	public int getinfoCast(List<Order> list)
 	{
 		int cast = 0;
 		for(var i : list)
@@ -513,9 +522,26 @@ public class ViewMain extends JFrame {
 		}
 		return cast;
 	}
+	public int getCastPromotion(Promotion p, List<Order> list)
+	{
+		int cast = 0;
+		cast = (int)((p.getGiaGiam()*0.01) * getinfoCast(list));
+		return cast;
+	}
+
+	
+	
 	public void updatetotal()
 	{
-		castLabel.setText(String.valueOf(getCast(listOrder)));
+		int ic = getinfoCast(listOrder);
+		int ip = getCastPromotion(promotion,listOrder);
+		castLabel.setText(String.valueOf(ic));
+		discountLabel.setText(String.valueOf(ip));
+		int vat = (int) ((ic-ip) * 0.1);
+		int total = ic-ip + vat;
+		System.out.println(ic +", "+ ip +", "+ total);
+		VATLabel.setText(String.valueOf(vat));
+		totalLabel.setText(String.valueOf(total));
 	}
 	public int checkProductinListOrder(Order order) {
 
@@ -529,6 +555,7 @@ public class ViewMain extends JFrame {
 	}
 
 	public JPanel newOrderPanelTab() {
+		
 		JPanel orderPanel = new JPanel();
 		orderPanel.setLayout(new BoxLayout(orderPanel, BoxLayout.Y_AXIS));
 
@@ -586,7 +613,7 @@ public class ViewMain extends JFrame {
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 23));
 
-		JLabel lblNewLabel_2 = new JLabel("VAT :");
+		JLabel lblNewLabel_2 = new JLabel("VAT (10%) :");
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
 		lblNewLabel_2.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 23));
 
@@ -599,6 +626,30 @@ public class ViewMain extends JFrame {
 		lblNewLabel_4.setFont(new Font("Arial", Font.PLAIN, 19));
 
 		JLabel lblNewLabel_5 = new JLabel("");
+		lblNewLabel_5.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					ChoosePromotion cp = new ChoosePromotion();
+					cp.addWindowListener(new WindowAdapter() {
+						public void windowClosed(WindowEvent e) {
+							
+							if(cp.State == true)
+							{
+								Promotion p = cp.getPromotionChoosed();
+								promotion = p;
+								updatetotal();
+							}
+							
+						}
+					});
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		lblNewLabel_5.setIcon(new ImageIcon(ViewMain.class.getResource("/img/subscription-alt.png")));
 		lblNewLabel_5.setForeground(new Color(255, 255, 255));
 		lblNewLabel_5.setFont(new Font("Arial", Font.PLAIN, 23));
@@ -671,6 +722,15 @@ public class ViewMain extends JFrame {
 		toltalPanel.setLayout(gl_toltalPanel);
 
 		JButton payBillOrderButton = new JButton("PAY");
+		payBillOrderButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				System.out.println();
+				
+				
+				
+			}
+		});
 		payBillOrderButton.setForeground(new Color(255, 255, 255));
 		payBillOrderButton.setBackground(new Color(0, 128, 0));
 		payBillOrderButton.setFont(new Font("Segoe UI", Font.BOLD, 20));

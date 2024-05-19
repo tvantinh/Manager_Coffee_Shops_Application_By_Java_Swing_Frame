@@ -6,7 +6,6 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import Object.Customer;
-import Object.Employee;
 
 public class CustomerTableModel extends AbstractTableModel{
 
