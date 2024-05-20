@@ -1,4 +1,4 @@
-package Object;
+package ModelApp.Object;
 
 public class Inventory {
 

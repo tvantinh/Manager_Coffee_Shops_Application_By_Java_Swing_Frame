@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Object.TypeInventory;
+import ModelApp.Object.TypeInventory;
+
 
 
 public class TypeInventoryTableModel extends AbstractTableModel{
@@ -18,7 +19,7 @@ public class TypeInventoryTableModel extends AbstractTableModel{
 	}
 	
 	
-	public void setData(List<TypeInventory> list)
+	public TypeInventoryTableModel(List<TypeInventory> list)
 	{
 		listTypeInventory = list;
 		fireTableDataChanged();

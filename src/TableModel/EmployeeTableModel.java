@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Object.Employee;
+import ModelApp.Object.Employee;
+
 
 public class EmployeeTableModel extends AbstractTableModel{
 	
@@ -16,7 +17,7 @@ public class EmployeeTableModel extends AbstractTableModel{
 	{
 		return listEmployee;
 	}
-	public void setData(List<Employee> employees)
+	public EmployeeTableModel(List<Employee> employees)
 	{
 		this.listEmployee = employees;
 		fireTableDataChanged();
@@ -40,7 +41,7 @@ public class EmployeeTableModel extends AbstractTableModel{
 		case 0:
 			return em.getTenNhanVien();
 		case 1:
-			return em.getNgaSinh();
+			return em.getNgaySinh();
 		case 2:
 			return em.getIDChucVu();
 		case 3:

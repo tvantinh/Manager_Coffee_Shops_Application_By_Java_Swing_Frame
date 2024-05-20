@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-import Object.Order;
+import ModelApp.Object.Order;
 
 import javax.swing.JTextArea;
 import javax.swing.ButtonGroup;
@@ -37,6 +37,10 @@ public class CreateOrder extends JFrame{
 	private JTextArea noteText;
 	private JLabel castLable;
 	private JRadioButton sizeL;
+	public JButton okeButton;
+	public JButton cancelButton;
+	public Button upButton;
+	public Button downButton;
 	/**
 	 * Create the application.
 	 */
@@ -119,25 +123,9 @@ public class CreateOrder extends JFrame{
 		noteText = new JTextArea();
 		noteText.setBounds(100, 107, 377, 76);
 		
-		JButton okeButton = new JButton("Ok");
-		okeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				State = true;
-				dispose();
-			}
-		});
+		okeButton = new JButton("Ok");
 		okeButton.setBounds(388, 186, 89, 23);
-		
-		JButton cancelButton = new JButton("cancel");
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int result = JOptionPane.showConfirmDialog(cancelButton, "Do you want to exit?", "Confirmation", JOptionPane.OK_CANCEL_OPTION);
-				if (result == JOptionPane.OK_OPTION) {
-					State = false;
-					dispose();
-				}
-			}
-		});
+		cancelButton = new JButton("cancel");
 		cancelButton.setBounds(275, 186, 89, 23);
 		
 		quanlityOrder = new JTextField("1");
@@ -145,6 +133,7 @@ public class CreateOrder extends JFrame{
 		quanlityOrder.setColumns(10);
 		
 		sizeM = new JRadioButton("M");
+		sizeM.setSelected(true);
 		sizeM.setBounds(101, 65, 39, 23);
 		sizeL = new JRadioButton("L");
 		sizeL.setBounds(142, 65, 39, 23);
@@ -154,20 +143,10 @@ public class CreateOrder extends JFrame{
 		JLabel lblNewLabel_6 = new JLabel("( chọn size nước )");
 		lblNewLabel_6.setBounds(181, 69, 103, 14);
 		
-		Button upButton = new Button("+");
-		upButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updateQlty(upButton.getLabel());
-			}
-		});
+		upButton = new Button("+");
 		upButton.setBounds(435, 25, 20, 20);
 		
-		Button downButton = new Button("-");
-		downButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updateQlty(upButton.getLabel());
-			}
-		});
+		downButton = new Button("-");
 		downButton.setBounds(457, 25, 20, 20);
 		
 		JLabel lblNewLabel_7 = new JLabel("Cast: ");

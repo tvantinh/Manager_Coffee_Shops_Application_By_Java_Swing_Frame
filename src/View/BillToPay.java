@@ -20,14 +20,13 @@ import java.util.List;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-import Object.Employee;
-import Object.Order;
-import Object.Promotion;
+import ModelApp.Object.Employee;
+import ModelApp.Object.Order;
+import ModelApp.Object.Promotion;
 
 import java.awt.Button;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 

@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Object.Customer;
+import ModelApp.Object.Customer;
+
 
 public class CustomerTableModel extends AbstractTableModel{
 
@@ -17,7 +18,7 @@ public class CustomerTableModel extends AbstractTableModel{
 	{
 		return listCustomer;
 	}
-	public void setData(List<Customer> Customer)
+	public CustomerTableModel(List<Customer> Customer)
 	{
 		this.listCustomer = Customer;
 		fireTableDataChanged();

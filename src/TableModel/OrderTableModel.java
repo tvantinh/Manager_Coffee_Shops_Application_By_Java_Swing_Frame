@@ -5,14 +5,15 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Object.Order;
+import ModelApp.Object.Order;
+
 
 public class OrderTableModel extends AbstractTableModel{
 	private static final long serialVersionUID = 1L;
 	protected static String[] COLUMN_NAMES = {"Item Name","Quantity","Size","Note","Cast"};
 	private List<Order> listOrder = new ArrayList<>();
 	
-	public void setData(List<Order> order)
+	public OrderTableModel(List<Order> order)
 	{
 		this.listOrder = order;
         fireTableDataChanged();

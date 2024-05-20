@@ -47,14 +47,14 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import Object.Customer;
-import Object.Employee;
-import Object.Inventory;
-import Object.Order;
-import Object.Product;
-import Object.Promotion;
-import Object.TypeInventory;
-import Object.TypeProduct;
+import ModelApp.Object.Customer;
+import ModelApp.Object.Employee;
+import ModelApp.Object.Inventory;
+import ModelApp.Object.Order;
+import ModelApp.Object.Product;
+import ModelApp.Object.Promotion;
+import ModelApp.Object.TypeInventory;
+import ModelApp.Object.TypeProduct;
 import TableModel.CustomerTableModel;
 import TableModel.EmployeeTableModel;
 import TableModel.InventoryTableModel;
@@ -84,8 +84,8 @@ public class ViewMain extends JFrame {
 			Image.SCALE_SMOOTH);
 	private Image findImg = new ImageIcon(ViewMain.class.getResource("/img/loupe.png")).getImage().getScaledInstance(24,
 			24, Image.SCALE_SMOOTH);
-	private Image avataDemo =new ImageIcon(ViewMain.class.getResource("/img/avataDemo.jpg")).getImage().getScaledInstance(68,
-			109, Image.SCALE_SMOOTH);
+	private Image avataDemo = new ImageIcon(ViewMain.class.getResource("/img/avataDemo.jpg")).getImage()
+			.getScaledInstance(68, 109, Image.SCALE_SMOOTH);
 	private JTextField searchTypeProductTextField;
 	private JTextField searchTypeInventoryTextField;
 	private JTextField IDTypeProductTextField;
@@ -111,37 +111,30 @@ public class ViewMain extends JFrame {
 	private JTextField textField_8;
 	private JTextField textField_9;
 	private JTextField textField_10;
-	Promotion promotion = new Promotion();
-	private JLabel castLabel;
-	private JLabel discountLabel;
-	private JLabel VATLabel;
-	private JLabel totalLabel;
-	private JTable productTable;
-	private JTable typeProductTable;
-	private JTable inventoryTable;
-	private JTable typeInventoryTable;
-	private JTable employeeTable;
-	private JTable customerTable;
-	private JTable promotionTable;
-	
-	private ProductTableModel tableModel = new ProductTableModel();
-	private TypeProductTableModel typeProductTableModel = new TypeProductTableModel();
-	private InventoryTableModel inventoryTableModel = new InventoryTableModel();
-	private TypeInventoryTableModel typeInventoryTableModel = new TypeInventoryTableModel();
-	private EmployeeTableModel employeeTableModel = new EmployeeTableModel();
-	private CustomerTableModel customerTableModel = new CustomerTableModel();
-	private PromotionTableModel promotionTableModel = new PromotionTableModel();
-	private JTabbedPane productsTabed = new JTabbedPane(JTabbedPane.BOTTOM);
-	private List<Order> listOrder = new ArrayList<>();
-	private JTable tableOrder;
 
-	private DefaultTableModel model = new DefaultTableModel();
+	public JLabel castLabel;
+	public JLabel discountLabel;
+	public JLabel VATLabel;
+	public JLabel totalLabel;
+	public JLabel choosePromotion;
+	public JButton payBillOrderButton;
+	private JTable productTable = new JTable();
+	private JTable typeProductTable = new JTable();
+	private JTable inventoryTable = new JTable();
+	private JTable typeInventoryTable = new JTable();
+	private JTable employeeTable = new JTable();
+	private JTable customerTable = new JTable();
+	private JTable promotionTable = new JTable();
+	public JTabbedPane productsTabed = new JTabbedPane(JTabbedPane.BOTTOM);
+	public JTable tableOrder;
+	
+
 	private JTextField textField_11;
 	private JTextField textField_12;
 	private JTextField textField_13;
 	private JTextField textField_14;
 	private JTextField textField_15;
-
+	public DefaultTableModel OrdertableModel = new DefaultTableModel();
 	/**
 	 * Create the application.
 	 */
@@ -349,213 +342,59 @@ public class ViewMain extends JFrame {
 	}
 
 	// set data table default
-	public void setDataTableProduct(List<Product> tb) {
-		tableModel.setData(tb);
+	public void setDataTableProduct(ProductTableModel productTableModel) {
+		productTable.setModel(productTableModel);
 	}
 
-	public void setDataTableTypeProduct(List<TypeProduct> tb) {
-		typeProductTableModel.setData(tb);
+	public void setDataTableTypeProduct(TypeProductTableModel typeProductTableModel) {
+		typeProductTable.setModel(typeProductTableModel);
 	}
 
-	public void setDataTableInventory(List<Inventory> tb) {
-		inventoryTableModel.setData(tb);
+	public void setDataTableInventory(InventoryTableModel inventoryTableModel) {
+		inventoryTable.setModel(inventoryTableModel);
 	}
 
-	public void setDataTableTypeInventory(List<TypeInventory> tb) {
-		typeInventoryTableModel.setData(tb);
+	public void setDataTableTypeInventory(TypeInventoryTableModel typeInventoryTableModel) {
+		typeInventoryTable.setModel(typeInventoryTableModel);
 	}
-	public void setDataTableEmployee(List<Employee> tb) {
-		employeeTableModel.setData(tb);
+
+	public void setDataTableEmployee(EmployeeTableModel employeeTableModel) {
+		employeeTable.setModel(employeeTableModel);
 	}
-	public void setDataTableCustomer(List<Customer> tb) {
-		customerTableModel.setData(tb);
+
+	public void setDataTableCustomer(CustomerTableModel customerTableModel) {
+		customerTable.setModel(customerTableModel);
 	}
-	public void setDataTablePromotion(List<Promotion> tb) {
-		promotionTableModel.setData(tb);
+
+	public void setDataTablePromotion(PromotionTableModel promotionTableModel) {
+		promotionTable.setModel(promotionTableModel);
 	}
+
 	// load data list Product in Panel
-	public void loadPanelOrder(List<TypeProduct> listType, List<Product> listProduct) {
-		for (var i : listType) {
-			JPanel panel = new JPanel();// Tạo một panel mới để chứa các nút
-			panel.setLayout(new FlowLayout());
-			int flag = 0;
-			for (var ip : listProduct) {
-				if (ip.getIDLoaiSP().equals(i.getIDLoaiSP())) {
-					JButton btn = new JButton(ip.getTenSanPham());
-					btn.setMargin(new Insets(10, 10, 10, 10));
-					btn.setPreferredSize(new Dimension(150, 50));
-					btn.addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							// TODO Auto-generated method stub
-							
-							Order od = new Order(ip.getIDSanPham(), ip.getTenSanPham(), 1, "M", "", ip.getGiaBan());
-							CreateOrder createOrder = new CreateOrder(od);
-							createOrder.addWindowListener(new WindowAdapter() {
-								public void windowClosed(WindowEvent e) {
-									Order newOrder = createOrder.getOrder();
-									if(createOrder.State == true)
-									{
-										addProductToOrder(newOrder, false);
-										updatetotal();
-									}
-									
-								}
-							});
-
-						}
-					});
-					panel.add(btn); // Thêm nút vào panel
-					flag = 1;
-				}
-			}
-
-			if (flag == 0) {
-				JLabel lblNewLabel = new JLabel("You need more product for this category!!!");
-				lblNewLabel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 40));
-				panel.add(lblNewLabel); // Thêm label vào panel nếu không có sản phẩm
-			}
-
-			JScrollPane scrollPane = new JScrollPane(panel); // Đặt panel vào JScrollPane
-			productsTabed.addTab(i.getTenLoai(), null, scrollPane, null);
-		}
-	}
+	
 
 	
-	public void addProductToOrder(Order od, boolean flag) {
-		//flag is true == update
-		//flag is false == new order
-		int row = checkProductinListOrder(od); //get row product in list(true is >= 0) and (false = -1)
-		if (flag == true) {
-			listOrder.set(row, od);
-			int cost = od.getSoLuong() * od.getGiaBan();
-			listOrder.get(row).setGiaBan(cost);
-			tableOrder.setValueAt(listOrder.get(row).getTenSanPham(), row, 0);
-			tableOrder.setValueAt(listOrder.get(row).getSoLuong(), row, 1);
-			tableOrder.setValueAt(listOrder.get(row).getSize(), row, 2);
-			tableOrder.setValueAt(listOrder.get(row).getGhichu(), row, 3);
-			tableOrder.setValueAt(listOrder.get(row).getGiaBan(), row, 4);
-			
-		} else {
-			if (row >= 0 && listOrder.get(row).getSize().equals(od.getSize())) {
-				//product is already in the list
-				int i = listOrder.get(row).getSoLuong();
-				i++;
-				int cost = i * od.getGiaBan();
-				listOrder.get(row).setSoLuong(i);
-				listOrder.get(row).setGiaBan(cost);
-				tableOrder.setValueAt(listOrder.get(row).getTenSanPham(), row, 0);
-				tableOrder.setValueAt(listOrder.get(row).getSoLuong(), row, 1);
-				tableOrder.setValueAt(listOrder.get(row).getSize(), row, 2);
-				tableOrder.setValueAt(listOrder.get(row).getGhichu(), row, 3);
-				tableOrder.setValueAt(listOrder.get(row).getGiaBan(), row, 4);
-			} else {
-				//The product is not in the list
-				listOrder.add(od);
-				Vector<Object> dataRow = new Vector<>();
-				dataRow.add(od.getTenSanPham());
-				dataRow.add(od.getSoLuong());
-				dataRow.add(od.getSize());
-				dataRow.add(od.getGhichu());
-				dataRow.add(od.getGiaBan());
-				ActionPane Pane = new ActionPane();
-				dataRow.add(Pane);				
-				model.addRow(dataRow);
-				ActionPanel(tableOrder,5);
-			}
-			
-			
-		}
-		
-		for (var il : listOrder) {
-			System.out.println(il.toString());
-		}
-		System.out.println("ket thuc");
-		tableOrder.setModel(model);
-	}
 
 	
-	public void ActionPanel(JTable table, int column)
-	{
-		// create 2 button action  and listener click component
-		TableActionEvent event = new TableActionEvent() {
-			@Override
-			public void onEdit(int row) {
-				EditOrder edv = new EditOrder(listOrder.get(row));
-				edv.addWindowListener(new WindowAdapter() {
-					public void windowClosed(WindowEvent e) {
-						Order editedOrder = edv.getOrder();
-						if(edv.State == true)
-						{
-							addProductToOrder(editedOrder, true);
-							updatetotal();
-						}
-					}
-				});
-			}
 
-			@Override
-			public void onDelete(int row) {
-				System.out.println("cot + " +row);
-				listOrder.remove(row);
-				model.removeRow(row);
-				updatetotal();
-				
-				for (var il : listOrder) {
-					System.out.println(il.toString());
-				}
-			}
-		};
-		table.getColumnModel().getColumn(column).setCellRenderer(new ActionPaneRenderer());// show action Pane
-		table.getColumnModel().getColumn(column).setCellEditor(new ButtonEditor(event));
-	}
-	
-	
-	
-	public int getinfoCast(List<Order> list)
-	{
+	public int getinfoCast(List<Order> list) {
 		int cast = 0;
-		for(var i : list)
-		{
+		for (var i : list) {
 			cast += i.getGiaBan();
 		}
 		return cast;
 	}
-	public int getCastPromotion(Promotion p, List<Order> list)
-	{
+
+	public int getCastPromotion(Promotion p, List<Order> list) {
 		int cast = 0;
-		cast = (int)((p.getGiaGiam()*0.01) * getinfoCast(list));
+		cast = (int) ((p.getGiaGiam() * 0.01) * getinfoCast(list));
 		return cast;
 	}
 
 	
-	
-	public void updatetotal()
-	{
-		int ic = getinfoCast(listOrder);
-		int ip = getCastPromotion(promotion,listOrder);
-		castLabel.setText(String.valueOf(ic));
-		discountLabel.setText(String.valueOf(ip));
-		int vat = (int) ((ic-ip) * 0.1);
-		int total = ic-ip + vat;
-		System.out.println(ic +", "+ ip +", "+ total);
-		VATLabel.setText(String.valueOf(vat));
-		totalLabel.setText(String.valueOf(total));
-	}
-	public int checkProductinListOrder(Order order) {
-
-		for (var i : listOrder) {
-			if (i.getIDSanPham() == order.getIDSanPham()) {
-
-				return listOrder.lastIndexOf(i);
-			}
-		}
-		return -1;
-	}
 
 	public JPanel newOrderPanelTab() {
-		
+
 		JPanel orderPanel = new JPanel();
 		orderPanel.setLayout(new BoxLayout(orderPanel, BoxLayout.Y_AXIS));
 
@@ -569,8 +408,8 @@ public class ViewMain extends JFrame {
 		componentOfBillPanel.setPreferredSize(new Dimension(900, 0));
 		paymentsBillPanel.add(componentOfBillPanel);
 		String[] COLUMN_NAMES = { "Item Name", "Quantity", "Size", "Note", "Cast", "Action" };
-		model = new DefaultTableModel(null, COLUMN_NAMES);
-		tableOrder = new JTable(model);
+		OrdertableModel = new DefaultTableModel(null, COLUMN_NAMES);
+		tableOrder = new JTable(OrdertableModel);
 		tableOrder.setRowHeight(25);
 
 		tableOrder.setSurrendersFocusOnKeystroke(true);
@@ -625,34 +464,9 @@ public class ViewMain extends JFrame {
 		lblNewLabel_4.setForeground(new Color(255, 255, 255));
 		lblNewLabel_4.setFont(new Font("Arial", Font.PLAIN, 19));
 
-		JLabel lblNewLabel_5 = new JLabel("");
-		lblNewLabel_5.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				try {
-					ChoosePromotion cp = new ChoosePromotion();
-					cp.addWindowListener(new WindowAdapter() {
-						public void windowClosed(WindowEvent e) {
-							
-							if(cp.State == true)
-							{
-								Promotion p = cp.getPromotionChoosed();
-								promotion = p;
-								updatetotal();
-							}
-							
-						}
-					});
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-			}
-		});
-		lblNewLabel_5.setIcon(new ImageIcon(ViewMain.class.getResource("/img/subscription-alt.png")));
-		lblNewLabel_5.setForeground(new Color(255, 255, 255));
-		lblNewLabel_5.setFont(new Font("Arial", Font.PLAIN, 23));
+		choosePromotion = new JLabel();
+		choosePromotion.setIcon(new ImageIcon(ViewMain.class.getResource("/img/subscription-alt.png")));
+		choosePromotion.setForeground(new Color(255, 255, 255));
 
 		JLabel lblNewLabel_6 = new JLabel("vnd");
 		lblNewLabel_6.setForeground(new Color(255, 255, 255));
@@ -700,7 +514,7 @@ public class ViewMain extends JFrame {
 										.addComponent(totalLabel))
 								.addGap(29)
 								.addGroup(gl_toltalPanel.createParallelGroup(Alignment.TRAILING)
-										.addComponent(lblNewLabel_4).addComponent(lblNewLabel_5)
+										.addComponent(lblNewLabel_4).addComponent(choosePromotion)
 										.addComponent(lblNewLabel_3).addComponent(lblNewLabel_6))))
 				.addContainerGap(12, Short.MAX_VALUE)));
 		gl_toltalPanel.setVerticalGroup(gl_toltalPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_toltalPanel
@@ -709,7 +523,7 @@ public class ViewMain extends JFrame {
 						.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(lblNewLabel_4).addComponent(castLabel))
 				.addGap(19)
-				.addGroup(gl_toltalPanel.createParallelGroup(Alignment.BASELINE).addComponent(lblNewLabel_5)
+				.addGroup(gl_toltalPanel.createParallelGroup(Alignment.BASELINE).addComponent(choosePromotion)
 						.addComponent(lblNewLabel_1).addComponent(discountLabel))
 				.addGap(18)
 				.addGroup(gl_toltalPanel.createParallelGroup(Alignment.BASELINE).addComponent(lblNewLabel_2)
@@ -721,16 +535,8 @@ public class ViewMain extends JFrame {
 				.addGap(33)));
 		toltalPanel.setLayout(gl_toltalPanel);
 
-		JButton payBillOrderButton = new JButton("PAY");
-		payBillOrderButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				System.out.println();
-				
-				
-				
-			}
-		});
+		payBillOrderButton = new JButton("PAY");
+		
 		payBillOrderButton.setForeground(new Color(255, 255, 255));
 		payBillOrderButton.setBackground(new Color(0, 128, 0));
 		payBillOrderButton.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -757,8 +563,6 @@ public class ViewMain extends JFrame {
 
 		productsPanel.add(typeProductsPanel);
 		typeProductsPanel.setLayout(new GridLayout(0, 2, 0, 0));
-
-		typeProductTable = new JTable(typeProductTableModel);
 		JScrollPane TypeProductTable = new JScrollPane();
 		TypeProductTable.setViewportView(typeProductTable);
 		TypeProductTable.setPreferredSize(new Dimension(0, 100));
@@ -830,7 +634,6 @@ public class ViewMain extends JFrame {
 
 		productPanel.setLayout(new GridLayout(0, 2, 0, 0));
 		JScrollPane ProductTable = new JScrollPane();
-		productTable = new JTable(tableModel);
 		ProductTable.setViewportView(productTable);
 		ProductTable.setPreferredSize(new Dimension(0, 150));
 		productPanel.add(ProductTable);
@@ -939,7 +742,6 @@ public class ViewMain extends JFrame {
 		inventoryPanel.add(typeInventoryPanel);
 		typeInventoryPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
-		typeInventoryTable = new JTable(typeInventoryTableModel);
 		JScrollPane sc = new JScrollPane();
 		sc.setViewportView(typeInventoryTable);
 
@@ -1013,7 +815,6 @@ public class ViewMain extends JFrame {
 		inventoryPanel.add(InventoryPanel);
 
 		InventoryPanel.setLayout(new GridLayout(0, 2, 0, 0));
-		inventoryTable = new JTable(inventoryTableModel);
 		JScrollPane sc2 = new JScrollPane();
 		sc2.setViewportView(inventoryTable);
 		sc2.setPreferredSize(new Dimension(0, 150));
@@ -1227,10 +1028,9 @@ public class ViewMain extends JFrame {
 
 		JScrollPane sc = new JScrollPane();
 		sc.setBounds(52, 90, 487, 180);
-		
+
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(sc, popupMenu);
-		promotionTable = new JTable(promotionTableModel);
 		sc.setViewportView(promotionTable);
 
 		textField_5 = new JTextField();
@@ -1242,7 +1042,7 @@ public class ViewMain extends JFrame {
 		btnNewButton_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Đang hoạt động", "Không hoạt động"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] { "Đang hoạt động", "Không hoạt động" }));
 		comboBox.setBounds(361, 52, 178, 27);
 		panel_5.setLayout(null);
 		panel_5.add(sc);
@@ -1252,62 +1052,61 @@ public class ViewMain extends JFrame {
 		panel_5.add(lblNewLabel_5_1);
 		panel_5.add(comboBox);
 
-		
 		JPanel panel_1_1 = new JPanel();
 		panel_1_1.setLayout(null);
 		panel_1_1.setBorder(new TitledBorder(null, "Update", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1_1.setBounds(26, 39, 575, 200);
 		panel_3.add(panel_1_1);
-		
+
 		JButton btnNewButton_2_1 = new JButton("update");
 		btnNewButton_2_1.setBounds(473, 214, 89, 23);
 		panel_1_1.add(btnNewButton_2_1);
-		
+
 		JLabel lblNewLabel_18_1 = new JLabel("ID Promotion :");
 		lblNewLabel_18_1.setBounds(33, 62, 77, 14);
 		panel_1_1.add(lblNewLabel_18_1);
-		
+
 		JLabel lblNewLabel_19_1 = new JLabel("Content  Promotion :");
 		lblNewLabel_19_1.setBounds(33, 93, 106, 14);
 		panel_1_1.add(lblNewLabel_19_1);
-		
+
 		textField_11 = new JTextField();
 		textField_11.setEnabled(false);
 		textField_11.setColumns(10);
 		textField_11.setBounds(191, 59, 371, 20);
 		panel_1_1.add(textField_11);
-		
+
 		textField_12 = new JTextField();
 		textField_12.setColumns(10);
 		textField_12.setBounds(191, 90, 371, 20);
 		panel_1_1.add(textField_12);
-		
+
 		JLabel lblNewLabel_19_1_1 = new JLabel("Discount : (%)");
 		lblNewLabel_19_1_1.setBounds(33, 124, 77, 14);
 		panel_1_1.add(lblNewLabel_19_1_1);
-		
+
 		textField_13 = new JTextField();
 		textField_13.setColumns(10);
 		textField_13.setBounds(191, 152, 371, 20);
 		panel_1_1.add(textField_13);
-		
+
 		JLabel lblNewLabel_19_1_2 = new JLabel("Day Start :");
 		lblNewLabel_19_1_2.setBounds(33, 155, 77, 14);
 		panel_1_1.add(lblNewLabel_19_1_2);
-		
+
 		JLabel lblNewLabel_19_1_3 = new JLabel("Day End :");
 		lblNewLabel_19_1_3.setBounds(33, 186, 67, 14);
 		panel_1_1.add(lblNewLabel_19_1_3);
-		
+
 		JButton btnNewButton_2_1_1 = new JButton("delete");
 		btnNewButton_2_1_1.setBounds(361, 214, 89, 23);
 		panel_1_1.add(btnNewButton_2_1_1);
-		
+
 		textField_14 = new JTextField();
 		textField_14.setColumns(10);
 		textField_14.setBounds(191, 121, 371, 20);
 		panel_1_1.add(textField_14);
-		
+
 		textField_15 = new JTextField();
 		textField_15.setColumns(10);
 		textField_15.setBounds(191, 183, 371, 20);
@@ -1333,8 +1132,8 @@ public class ViewMain extends JFrame {
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(
-				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
-				"FIND", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "FIND",
+				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		findEmployee.add(panel);
 
 		JLabel lblNewLabel = new JLabel("Name:");
@@ -1437,16 +1236,16 @@ public class ViewMain extends JFrame {
 		textField_10.setColumns(10);
 		textField_10.setBounds(479, 120, 173, 19);
 		panel_1.add(textField_10);
-		
+
 		JLabel lblNewLabel_8 = new JLabel("");
 		lblNewLabel_8.setIcon(new ImageIcon(avataDemo));
 		lblNewLabel_8.setBounds(10, 28, 68, 109);
 		panel_1.add(lblNewLabel_8);
-		
-				JButton btnNewButton_2 = new JButton("Add");
-				btnNewButton_2.setBounds(12, 167, 66, 23);
-				panel_1.add(btnNewButton_2);
-				btnNewButton_2.setBackground(new Color(255, 255, 255));
+
+		JButton btnNewButton_2 = new JButton("Add");
+		btnNewButton_2.setBounds(12, 167, 66, 23);
+		panel_1.add(btnNewButton_2);
+		btnNewButton_2.setBackground(new Color(255, 255, 255));
 
 		JPanel employeeList = new JPanel();
 		employeeList.setBorder(
@@ -1454,13 +1253,9 @@ public class ViewMain extends JFrame {
 		employeeList.setPreferredSize(new Dimension(0, 650));
 		employeePanel.add(employeeList);
 		employeeList.setLayout(new GridLayout(1, 0, 0, 0));
-		
-		employeeTable = new JTable(employeeTableModel);
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(employeeTable);
 		employeeList.add(scrollPane);
-
-		
 
 		return employeePanel;
 	}
@@ -1603,8 +1398,6 @@ public class ViewMain extends JFrame {
 
 		JScrollPane scrollPane = new JScrollPane();
 		employeeList.add(scrollPane);
-
-		customerTable = new JTable(customerTableModel);
 		scrollPane.setViewportView(customerTable);
 		return customerPanel;
 	}
@@ -1701,6 +1494,7 @@ public class ViewMain extends JFrame {
 		accountPanel.setLayout(gl_accountPanelTab);
 		return accountPanel;
 	}
+
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -1708,11 +1502,13 @@ public class ViewMain extends JFrame {
 					showMenu(e);
 				}
 			}
+
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					showMenu(e);
 				}
 			}
+
 			private void showMenu(MouseEvent e) {
 				popup.show(e.getComponent(), e.getX(), e.getY());
 			}

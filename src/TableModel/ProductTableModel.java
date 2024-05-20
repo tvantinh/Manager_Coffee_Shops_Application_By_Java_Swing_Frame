@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Object.Product;
+import ModelApp.Object.Product;
+
 public class ProductTableModel extends AbstractTableModel{
 
 	private static final long serialVersionUID = 1L;
@@ -13,21 +14,16 @@ public class ProductTableModel extends AbstractTableModel{
 	List<Product> listProduct = new ArrayList<>();
 	
 	
-	public ProductTableModel()
+	public ProductTableModel(List<Product> products)
 	{
-
+		this.listProduct = products;
+        fireTableDataChanged();
 	}
 	
 	public List<Product> getListProduct() {
 		return listProduct;
 	}
 	
-	
-	public void setData(List<Product> products)
-	{
-		this.listProduct = products;
-        fireTableDataChanged();
-	}
 	@Override
 	public int getRowCount() {
 		return listProduct.size();

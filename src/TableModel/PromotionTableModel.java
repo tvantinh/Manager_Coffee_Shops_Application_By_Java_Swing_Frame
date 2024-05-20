@@ -6,7 +6,9 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Object.Promotion;
+import ModelApp.Object.Promotion;
+
+
 
 public class PromotionTableModel extends AbstractTableModel{
 
@@ -20,7 +22,7 @@ public class PromotionTableModel extends AbstractTableModel{
 	public void setListPromotion(List<Promotion> listPromotion) {
 		this.listPromotion = listPromotion;
 	}
-	public void setData(List<Promotion> promotion)
+	public PromotionTableModel(List<Promotion> promotion)
 	{
 		this.listPromotion = promotion;
         fireTableDataChanged();

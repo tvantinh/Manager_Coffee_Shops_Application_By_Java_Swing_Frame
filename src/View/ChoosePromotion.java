@@ -1,29 +1,22 @@
 package View;
-
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Model.Model;
-import Object.Promotion;
+import ModelApp.Object.Promotion;
 import TableModel.PromotionTableModel;
 
 import javax.swing.JTable;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import javax.swing.JTextField;
 import java.awt.Toolkit;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
@@ -34,22 +27,20 @@ public class ChoosePromotion extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private Model model = new Model();
-	private PromotionTableModel modelTabel = new PromotionTableModel();
+	private PromotionTableModel modelTabel = new PromotionTableModel(null);
 	private Promotion promotionChoose = new Promotion();
 	private JLabel titleLablePromotion;
 	public boolean State = false;
 	public void setDataTablePromotion(List<Promotion> tb) {
-		modelTabel.setData(tb);
+		modelTabel.setListPromotion(tb);
 	}
 	public Promotion getPromotionChoosed()
 	{
 		return promotionChoose;
 	}
-	public ChoosePromotion() throws SQLException {
-		List<Promotion> tb = model.getDataPromotion();
-		setDataTablePromotion(tb);
+	public ChoosePromotion(List<Promotion> tb) throws SQLException {
 		init();
+		setDataTablePromotion(tb);
 		this.setVisible(true);
 	}
 	public void init() {

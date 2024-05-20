@@ -12,16 +12,12 @@ import java.awt.Button;
 import java.awt.Label;
 import javax.swing.JTextField;
 
-import Object.Order;
+import ModelApp.Object.Order;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.Color;
 import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 public class EditOrder extends JFrame{
 
 	/**
@@ -31,10 +27,15 @@ public class EditOrder extends JFrame{
 	private JTextField quanlityTextField;
 	public boolean State;
 	private Label costItem;
-	private Order ordersucces;
+	
 	private JComboBox comboBox;
 	private TextArea noteText;
-	private Order orderedit;
+	public Order ordersucces;
+	public Order orderedit;
+	public Button cancelButton;
+	public Button okButton;
+	public Button upButton;
+	public Button downButton;
 	/**
 	 * Launch the application.
 	 */
@@ -108,26 +109,12 @@ public class EditOrder extends JFrame{
 		noteText.setBounds(63, 103, 613, 160);
 		this.getContentPane().add(noteText);
 		
-		Button cancelButton = new Button("cancel");
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int result = JOptionPane.showConfirmDialog(cancelButton, "Do you want to exit?", "Confirmation", JOptionPane.OK_CANCEL_OPTION);
-				if (result == JOptionPane.OK_OPTION) {
-					State = false;
-					dispose();
-				}
-			}
-		});
+		cancelButton = new Button("cancel");
+		
 		cancelButton.setBounds(495, 269, 70, 22);
 		this.getContentPane().add(cancelButton);
 		
-		Button okButton = new Button("ok");
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				State = true;
-				dispose();
-			}
-		});
+		okButton = new Button("ok");
 		okButton.setBounds(606, 269, 70, 22);
 		this.getContentPane().add(okButton);
 		
@@ -153,23 +140,12 @@ public class EditOrder extends JFrame{
 		this.getContentPane().add(quanlityTextField);
 		quanlityTextField.setColumns(10);
 		
-		Button upButton = new Button("+");
-		upButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				updateQlty(upButton.getLabel(),order);
-			}
-		});
+		upButton = new Button("+");
 		upButton.setBounds(382, 55, 20, 20);
 		this.getContentPane().add(upButton);
 		
-		Button downButton = new Button("-");
-		downButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				updateQlty(downButton.getLabel(),order);
-			}
-		});
+		downButton = new Button("-");
+		
 		downButton.setBounds(408, 55, 20, 20);
 		this.getContentPane().add(downButton);
 		

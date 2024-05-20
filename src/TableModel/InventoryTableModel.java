@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Object.Inventory;
+import ModelApp.Object.Inventory;
+
+
 
 public class InventoryTableModel extends AbstractTableModel{
 
@@ -23,7 +25,7 @@ public class InventoryTableModel extends AbstractTableModel{
 	public List<Inventory> getListInventory() {
 		return listInventory;
 	}
-	public void setData(List<Inventory> ls)
+	public InventoryTableModel(List<Inventory> ls)
 	{
 		this.listInventory = ls;
 		fireTableDataChanged();

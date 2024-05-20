@@ -6,7 +6,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Object.TypeProduct;
+import ModelApp.Object.TypeProduct;
+
 
 public class TypeProductTableModel extends AbstractTableModel {
 
@@ -22,7 +23,7 @@ public class TypeProductTableModel extends AbstractTableModel {
 	}
 	
 	
-	public void setData(List<TypeProduct> list)
+	public TypeProductTableModel(List<TypeProduct> list)
 	{
 		listTypeProduct = list;
 		fireTableDataChanged();

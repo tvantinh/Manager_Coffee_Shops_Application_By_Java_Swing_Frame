@@ -1,5 +1,4 @@
-package Object;
-
+package ModelApp.Object;
 import java.io.Serializable;
 
 public class TypeProduct implements Serializable{

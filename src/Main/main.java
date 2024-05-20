@@ -3,7 +3,6 @@ package Main;
 import javax.swing.SwingUtilities;
 
 import Controller.Controller;
-import Model.Model;
 import View.ViewMain;
 
 public class main {
@@ -12,10 +11,13 @@ public class main {
 		SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-            	Model model = new Model();
                 ViewMain view = new ViewMain();
-                Controller controller = new Controller(view,model);
-                controller.refeshdata();
+                try {
+					new Controller(view);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 view.setVisible(true);
             }
         });

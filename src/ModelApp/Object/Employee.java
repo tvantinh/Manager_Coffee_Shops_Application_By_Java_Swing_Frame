@@ -1,4 +1,4 @@
-package Object;
+package ModelApp.Object;
 
 import java.io.Serializable;
 
@@ -17,17 +17,14 @@ public class Employee implements Serializable{
 	String anhDaiDien;
 	String IDChucVu;
 	String ngayBatDauLamViec;
+	String taiKhoan;
+	String matKhau;
 	public Employee() {
 		
 	}
-	public String getIDNhanVien() {
-		return IDNhanVien;
-	}
-	public void setIDNhanVien(String iDNhanVien) {
-		IDNhanVien = iDNhanVien;
-	}
+	
 	public Employee(String iDNhanVien, String tenNhanVien, String ngaySinh, String cCCD, String sDT, String gioiTinh,
-			String anhDaiDien, String iDChucVu, String ngayBatDauLamViec) {
+			String anhDaiDien, String iDChucVu, String ngayBatDauLamViec, String taiKhoan, String matKhau) {
 		super();
 		IDNhanVien = iDNhanVien;
 		this.tenNhanVien = tenNhanVien;
@@ -38,18 +35,40 @@ public class Employee implements Serializable{
 		this.anhDaiDien = anhDaiDien;
 		IDChucVu = iDChucVu;
 		this.ngayBatDauLamViec = ngayBatDauLamViec;
+		this.taiKhoan = taiKhoan;
+		this.matKhau = matKhau;
 	}
+
+	public String getNgaySinh() {
+		return ngaySinh;
+	}
+	public void setNgaySinh(String ngaySinh) {
+		this.ngaySinh = ngaySinh;
+	}
+	public String getTaiKhoan() {
+		return taiKhoan;
+	}
+	public void setTaiKhoan(String taiKhoan) {
+		this.taiKhoan = taiKhoan;
+	}
+	public String getMatKhau() {
+		return matKhau;
+	}
+	public void setMatKhau(String matKhau) {
+		this.matKhau = matKhau;
+	}
+	public String getIDNhanVien() {
+		return IDNhanVien;
+	}
+	public void setIDNhanVien(String iDNhanVien) {
+		IDNhanVien = iDNhanVien;
+	}
+	
 	public String getTenNhanVien() {
 		return tenNhanVien;
 	}
 	public void setTenNhanVien(String tenNhanVien) {
 		this.tenNhanVien = tenNhanVien;
-	}
-	public String getNgaSinh() {
-		return ngaySinh;
-	}
-	public void setNgaSinh(String ngaSinh) {
-		this.ngaySinh = ngaSinh;
 	}
 	public String getCCCD() {
 		return CCCD;
