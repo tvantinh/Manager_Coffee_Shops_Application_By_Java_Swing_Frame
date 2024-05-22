@@ -23,6 +23,8 @@ import javax.swing.JRootPane;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class CreateOrder extends JFrame{
 
@@ -30,17 +32,18 @@ public class CreateOrder extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextField quanlityOrder;
+	private JTextField quanlityOrder = new JTextField("1");
 	public boolean State;
-	private JRadioButton sizeM;
-	private Order newOrder;
+	public JRadioButton sizeM;
+	public Order newOrder;
 	private JTextArea noteText;
 	private JLabel castLable;
-	private JRadioButton sizeL;
+	public JRadioButton sizeL;
 	public JButton okeButton;
 	public JButton cancelButton;
 	public Button upButton;
 	public Button downButton;
+	public int sl = Integer.parseInt(quanlityOrder.getText());
 	/**
 	 * Create the application.
 	 */
@@ -65,7 +68,7 @@ public class CreateOrder extends JFrame{
 	 */
 	public void updateQlty(String str)
 	{
-		int sl = Integer.parseInt(quanlityOrder.getText());
+		
 		if(str.equals("+") )
 		{
 			sl++;
@@ -74,6 +77,10 @@ public class CreateOrder extends JFrame{
 			sl--;
 		}
 		
+		updatePrice();
+	}
+	public void updatePrice()
+	{
 		quanlityOrder.setText(String.valueOf(sl));
 		int cost = newOrder.getGiaBan() * Integer.parseInt(quanlityOrder.getText());
 		castLable.setText(String.valueOf(cost));
@@ -140,8 +147,8 @@ public class CreateOrder extends JFrame{
 		ButtonGroup G = new ButtonGroup();
 		G.add(sizeM);
 		G.add(sizeL);
-		JLabel lblNewLabel_6 = new JLabel("( chọn size nước )");
-		lblNewLabel_6.setBounds(181, 69, 103, 14);
+		JLabel lblNewLabel_6 = new JLabel("Giá UpSize L:");
+		lblNewLabel_6.setBounds(181, 69, 82, 14);
 		
 		upButton = new Button("+");
 		upButton.setBounds(435, 25, 20, 20);
@@ -150,11 +157,11 @@ public class CreateOrder extends JFrame{
 		downButton.setBounds(457, 25, 20, 20);
 		
 		JLabel lblNewLabel_7 = new JLabel("Cast: ");
-		lblNewLabel_7.setBounds(294, 67, 46, 14);
+		lblNewLabel_7.setBounds(356, 65, 46, 14);
 		lblNewLabel_7.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 15));
 		
 		castLable = new JLabel(String.valueOf(newOrder.getGiaBan()));
-		castLable.setBounds(347, 69, 46, 14);
+		castLable.setBounds(409, 67, 46, 14);
 		panel_2.setLayout(null);
 		panel_2.add(lblNewLabel_3);
 		panel_2.add(lblNewLabel_4);
@@ -170,6 +177,10 @@ public class CreateOrder extends JFrame{
 		panel_2.add(downButton);
 		panel_2.add(lblNewLabel_7);
 		panel_2.add(castLable);
+		
+		JLabel upsizeLabel = new JLabel(String.valueOf(newOrder.getGiaUpsize()));
+		upsizeLabel.setBounds(277, 69, 46, 14);
+		panel_2.add(upsizeLabel);
 	}
 
 }

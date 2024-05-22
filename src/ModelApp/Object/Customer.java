@@ -10,6 +10,7 @@ public class Customer implements Serializable{
 	String SDT; 
 	String diaChi;
 	String email;
+	public Customer() {}
 	public Customer(String iDKH, String tenKH, String gioiTinh, String sDT, String diaChi, String email) {
 		super();
 		IDKH = iDKH;

@@ -45,7 +45,7 @@ public class EditOrder extends JFrame{
 	 */
 	public EditOrder(Order order) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(EditOrder.class.getResource("/img/Logo.png")));
-		getContentPane().setBackground(new Color(255, 128, 128));
+		getContentPane().setBackground(new Color(192, 192, 192));
 		orderedit = order;
 		initialize(order);
 	}

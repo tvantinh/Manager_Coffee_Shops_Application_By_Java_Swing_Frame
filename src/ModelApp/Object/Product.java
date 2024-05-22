@@ -14,13 +14,13 @@ public class Product implements Serializable{
 	String moTa;
 	int giaBan;
 	String IDLoaiSP;
-	
+	int upsize;
 	
 	public Product()
 	{
 		
 	}
-	public Product(String IDSanPham,String tenSanPham, String donViTinh, String moTa, int giaBan, String IDLoaiSP)
+	public Product(String IDSanPham,String tenSanPham, String donViTinh, String moTa, int giaBan, String IDLoaiSP,int upsize)
 	{
 		this.IDSanPham = IDSanPham;
 		this.tenSanPham = tenSanPham;
@@ -28,6 +28,13 @@ public class Product implements Serializable{
 		this.moTa = moTa;
 		this.giaBan = giaBan;
 		this.IDLoaiSP = IDLoaiSP;
+		this.upsize = upsize;
+	}
+	public int getUpsize() {
+		return upsize;
+	}
+	public void setUpsize(int upsize) {
+		this.upsize = upsize;
 	}
 	public String getIDSanPham() {
         return IDSanPham;

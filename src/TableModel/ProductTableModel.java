@@ -10,7 +10,7 @@ import ModelApp.Object.Product;
 public class ProductTableModel extends AbstractTableModel{
 
 	private static final long serialVersionUID = 1L;
-	protected static String[] COLUMN_NAMES = {"ID","Product name","Unit" ,"Price","describe","",""};
+	protected static String[] COLUMN_NAMES = {"ID","Product name","Unit" ,"Price","describe","IDTypeProduct","Upsize",""};
 	List<Product> listProduct = new ArrayList<>();
 	
 	
@@ -52,6 +52,8 @@ public class ProductTableModel extends AbstractTableModel{
             return pd.getGiaBan();
         case 5:
             return pd.getIDLoaiSP();
+        case 6:
+            return pd.getUpsize();
         default:
             return null;
             }

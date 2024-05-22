@@ -11,6 +11,7 @@ public class Order implements Serializable{
 	private String size;
 	private String Ghichu;
 	private int giaBan;
+	private int giaUpsize;
 	public String getIDSanPham() {
 		return IDSanPham;
 	}
@@ -55,7 +56,7 @@ public class Order implements Serializable{
 		return "Order [IDSanPham=" + IDSanPham + ", tenSanPham=" + tenSanPham + ", soLuong=" + soLuong + ", size="
 				+ size + ", Ghichu=" + Ghichu + ", giaBan=" + giaBan + "]";
 	}
-	public Order(String iDSanPham, String tenSanPham, int soLuong, String size, String ghichu, int giaBan) {
+	public Order(String iDSanPham, String tenSanPham, int soLuong, String size, String ghichu, int giaBan, int giaUpsize) {
 		super();
 		IDSanPham = iDSanPham;
 		this.tenSanPham = tenSanPham;
@@ -63,6 +64,13 @@ public class Order implements Serializable{
 		this.size = size;
 		Ghichu = ghichu;
 		this.giaBan = giaBan;
+		this.giaUpsize = giaUpsize;
+	}
+	public int getGiaUpsize() {
+		return giaUpsize;
+	}
+	public void setGiaUpsize(int giaUpsize) {
+		this.giaUpsize = giaUpsize;
 	}
 	public Order() {
 	}

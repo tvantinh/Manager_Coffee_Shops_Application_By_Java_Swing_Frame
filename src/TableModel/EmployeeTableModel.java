@@ -11,7 +11,7 @@ import ModelApp.Object.Employee;
 public class EmployeeTableModel extends AbstractTableModel{
 	
 	private static final long serialVersionUID = 1L;
-	protected static String[] COLUMN_NAMES = {"Name","Date of birth","Position","Sex"};
+	protected static String[] COLUMN_NAMES = {"ID","Name","Date of birth","Phone number","CCCD","Position"};
 	List<Employee> listEmployee = new ArrayList<>();
 	public List<Employee> getListEmployee()
 	{
@@ -39,13 +39,17 @@ public class EmployeeTableModel extends AbstractTableModel{
 		switch(columnIndex)
 		{
 		case 0:
-			return em.getTenNhanVien();
+			return em.getIDNhanVien();
 		case 1:
-			return em.getNgaySinh();
+			return em.getTenNhanVien();
 		case 2:
-			return em.getIDChucVu();
+			return em.getNgaySinh();
 		case 3:
-			return em.getGioiTinh();
+			return em.getSDT();
+		case 4:
+			return em.getCCCD();
+		case 5:
+			return em.getIDChucVu();
 		default:
 			return null;
 		}

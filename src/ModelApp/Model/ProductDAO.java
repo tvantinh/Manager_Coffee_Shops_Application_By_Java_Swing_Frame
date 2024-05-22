@@ -26,7 +26,8 @@ public class ProductDAO {
 	                String productDescribe = rs.getString("MoTa");
 	                int productPrice = rs.getInt("GiaBan");
 	                String productIDType = rs.getString("IDLoaiSP");
-	                listProduct.add(new Product(productID,productname,productUnit,productDescribe,productPrice,productIDType));
+	                int upsize = rs.getInt("GiaUpsize");
+	                listProduct.add(new Product(productID,productname,productUnit,productDescribe,productPrice,productIDType,upsize));
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();

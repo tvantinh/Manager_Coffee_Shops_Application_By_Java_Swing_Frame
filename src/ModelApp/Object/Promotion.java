@@ -13,7 +13,11 @@ public class Promotion implements Serializable {
 	
 	public Promotion() 
 	{
-		
+		IDKhuyenMai = "";
+		NoiDung = "";
+		GiaGiam = 0;
+		NgayBD = "";
+		NgayKT = "";
 	}
 	public Promotion(String iDKhuyenMai, String noiDung, int giaGiam, String ngayBD, String ngayKT) {
 		super();
