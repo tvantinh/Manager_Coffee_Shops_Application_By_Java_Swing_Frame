@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 public class Promotion implements Serializable {
 	
+	@Override
+	public String toString() {
+		return "Promotion [IDKhuyenMai=" + IDKhuyenMai + ", NoiDung=" + NoiDung + ", GiaGiam=" + GiaGiam + ", NgayBD="
+				+ NgayBD + ", NgayKT=" + NgayKT + "]";
+	}
 	private static final long serialVersionUID = 1L;
 	String IDKhuyenMai;
 	String NoiDung;
@@ -13,7 +18,7 @@ public class Promotion implements Serializable {
 	
 	public Promotion() 
 	{
-		IDKhuyenMai = "";
+		IDKhuyenMai = "KM000";
 		NoiDung = "";
 		GiaGiam = 0;
 		NgayBD = "";

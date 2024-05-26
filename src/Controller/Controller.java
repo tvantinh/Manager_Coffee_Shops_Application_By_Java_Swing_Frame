@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,8 @@ import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -74,6 +77,7 @@ import View.ChoosePromotion;
 import View.CreateEmployee;
 import View.CreateOrder;
 import View.EditOrder;
+import View.RegisterVIPCustomers;
 import View.ViewMain;
 import ViewHelper.ActionPane;
 import ViewHelper.ActionPaneRenderer;
@@ -108,8 +112,6 @@ public class Controller {
 		}
 	}
 
-	
-	
 	public void initialize() throws SQLException {
 		setDataTableProduct();
 		setDataTableCustomer();
@@ -135,24 +137,24 @@ public class Controller {
 				}
 				view.txtidbill.setText(view.billTable.getValueAt(r, 0).toString());
 				view.txtdate.setText(view.billTable.getValueAt(r, 1).toString());
-				view.txttotal.setText(view.billTable.getValueAt(r, 2).toString());	
+				view.txttotal.setText(view.billTable.getValueAt(r, 2).toString());
 				view.txtemp.setText(view.billTable.getValueAt(r, 3).toString());
 				view.txtcus.setText(view.billTable.getValueAt(r, 4).toString());
 				view.txtidpromotion.setText(view.billTable.getValueAt(r, 5).toString());
-				if(view.billTable.getValueAt(r, 6).toString()!=null) {
+				if (view.billTable.getValueAt(r, 6).toString() != null) {
 					view.txtnote.setText(view.billTable.getValueAt(r, 6).toString());
 				}
-				
+
 			}
 		});
 	}
-	
+
 	public void updateTotalToBill(BillToPay BP, Promotion p, int castTotal) {
 		BP.discountLabel.setText(p.getNoiDung());
 		BP.percentOfPromotion.setText(p.getGiaGiam() + " %");
 
 		int discountTotal = (int) (castTotal * (p.getGiaGiam() * 0.01));
-		int vat = (int) ((castTotal - discountTotal) * 0.1);// mac dinh 10% vat
+		int vat = (int) ((castTotal - discountTotal) * 0.1);
 		int total = castTotal - discountTotal + vat;
 		BP.totalLabel.setText(String.valueOf(total));
 		System.out.println(vat + "  , " + discountTotal + " , " + total);
@@ -165,8 +167,10 @@ public class Controller {
 				if (listOrder.size() > 0) {
 					BillToPay BP;
 					try {
-						BP = new BillToPay(employeeLogin, listOrder, view.totalLabel.getText());
 
+						BP = new BillToPay(employeeLogin, listOrder, view.totalLabel.getText());
+						String IDHoaDon = RanmdomIDHoaDon(employeeLogin, BP.customer, BP.promotion);
+						BP.billNumberLabel.setText(IDHoaDon);
 						BP.setVisible(true);
 						BP.cashComboBox.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
@@ -184,10 +188,20 @@ public class Controller {
 											public void windowClosed(WindowEvent e) {
 
 												if (cp.State == true) {
-													BP.setPromotion(cp.getPromotionChoosed());
-													updateTotalToBill(BP, BP.promotion,
-															Integer.parseInt(view.totalLabel.getText()));
-
+													if (cp.getPromotionChoosed().getIDKhuyenMai().trim().equals("KMVIP"))
+														if (BP.customer.getIDKH().equals("KH0VL"))
+															JOptionPane.showMessageDialog(view.componentOfBillPanel,
+																	"vui lòng nhập số điện thoại khách hàng!!!");
+														else {
+															BP.setPromotion(cp.getPromotionChoosed());
+															updateTotalToBill(BP, BP.promotion,
+																	Integer.parseInt(view.totalLabel.getText()));
+														}
+													else {
+														BP.setPromotion(cp.getPromotionChoosed());
+														updateTotalToBill(BP, BP.promotion,
+																Integer.parseInt(view.totalLabel.getText()));
+													}
 												}
 
 											}
@@ -217,6 +231,7 @@ public class Controller {
 											JOptionPane.showMessageDialog(BP,
 													"Không có khách hàng với SDT vừa nhập vui lòng nhập lại(nếu chưa có xin hãy đăng kí khách hàng mới)!!!");
 										} else {
+											BP.setCustomer(customer);
 											BP.nameCustomerLabel.setText(customer.getTenKH());
 											BP.useVIPbtn.setEnabled(true);
 										}
@@ -228,9 +243,56 @@ public class Controller {
 								}
 							}
 						});
+						BP.registerCustomer.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								RegisterVIPCustomers RG = new RegisterVIPCustomers();
+								RG.setVisible(true);
+								RG.registerbtn.addActionListener(new ActionListener() {
+									
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										if(RG.check())
+										{
+											try {
+												if(CustomerDAO.checkIDKH(RG.RanmdomIDKH()))
+												{
+													JOptionPane.showMessageDialog(RG, "Khách hàng đã tồn tại!!!");
+												}
+												else {
+													CustomerDAO.insertCustomer(RG.getCustomer());
+													JOptionPane.showMessageDialog(RG, "Thêm khách hàng thành công!!!");
+													RG.dispose();
+												}
+											} catch (HeadlessException | NoSuchAlgorithmException | SQLException e1) {
+												// TODO Auto-generated catch block
+												e1.printStackTrace();
+											}
+										}else {
+											JOptionPane.showMessageDialog(RG, "vui lòng nhập đủ các trường!!!");
+										}
+										
+									}
+								});
+								RG.cancelbtn.addActionListener(new ActionListener() {
+									
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										// TODO Auto-generated method stub
+										int result = JOptionPane.showConfirmDialog(RG.cancelbtn, "Do you want to exit?",
+												"Confirmation", JOptionPane.OK_CANCEL_OPTION);
+										if (result == JOptionPane.OK_OPTION) {
+											RG.dispose();
+										}
+									}
+								});
+							}
+						});
 						BP.useVIPbtn.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
-								BP.promotion = new Promotion("KMKHACHVIP", "Khuyến mãi khách vip", 20, null, null);
+								BP.promotion = new Promotion("KMVIP", "Khuyến mãi khách vip", 20, null, null);
+
 								updateTotalToBill(BP, BP.promotion, Integer.parseInt(view.totalLabel.getText()));
 							}
 						});
@@ -246,21 +308,25 @@ public class Controller {
 						BP.Paybtn.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								try {
-									String IDHoaDon = RanmdomIDHoaDon(employeeLogin,BP.customer,BP.promotion);
-									Date date = new Date();
-									SimpleDateFormat df = new SimpleDateFormat("EEEE, dd-MM-YYYY");
-									String dayFormat = df.format(date);
-									orderDAO.insert(employeeLogin, IDHoaDon, dayFormat, Integer.valueOf(BP.totalLabel.getText()) , BP.customer, BP.promotion, BP.noteText.getText(), listOrder);
-									JOptionPane.showMessageDialog(view.componentOfBillPanel, "Thanh toán thành công!!!");
+
+									Timestamp time = new Timestamp(System.currentTimeMillis());
+									System.out.println(BP.promotion.toString());
+									orderDAO.insert(employeeLogin, IDHoaDon, time, BP.getTotal(), BP.customer,
+											BP.getPromotion(), BP.getNote(), listOrder);
+									JOptionPane.showMessageDialog(view.componentOfBillPanel,
+											"Thanh toán thành công!!!");
 									BP.dispose();
-								}
-								catch (Exception ev)
-								{
+								} catch (Exception ev) {
 									ev.printStackTrace();
 								}
 							}
 						});
-					} catch (SQLException e1) {
+						BP.addWindowListener(new WindowAdapter() {
+							public void windowClosed(WindowEvent e) {
+								resetItemOrder();
+							}
+						});
+					} catch (SQLException | NoSuchAlgorithmException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
@@ -274,13 +340,18 @@ public class Controller {
 
 	}
 
+	public void resetItemOrder() {
+		listOrder.clear();
+		view.OrdertableModel.setRowCount(0);
+	}
+
 	public void setDataTableBillHistory() throws SQLException {
 
 		List<Bill> listProduct = billDAO.getData();
 		BillTableModel BillHistoryTableModel = new BillTableModel(listProduct);
 		BillHistoryTableModel.fireTableDataChanged();
 		view.setDataTableBillHistory(BillHistoryTableModel);
-		
+
 	}
 
 	public void setDataTableProduct() throws SQLException {
@@ -289,7 +360,7 @@ public class Controller {
 		ProductTableModel productTableModel = new ProductTableModel(listProduct);
 		productTableModel.fireTableDataChanged();
 		view.setDataTableProduct(productTableModel);
-		
+
 	}
 
 	public void setDataTableTypeProduct() throws SQLException {
@@ -333,7 +404,6 @@ public class Controller {
 		promotionTableModel.fireTableDataChanged();
 		view.setDataTablePromotion(promotionTableModel);
 	}
-
 
 	public int getinfoCast(List<Order> list) {
 		int cast = 0;
@@ -417,8 +487,7 @@ public class Controller {
 		table.getColumnModel().getColumn(column).setCellEditor(new ButtonEditor(event));
 	}
 
-	public String IDStringConvert(Employee e, Customer c,Promotion p)
-	{
+	public String IDStringConvert(Employee e, Customer c, Promotion p) {
 		StringBuilder str = new StringBuilder();
 		str.append(e.getIDNhanVien());
 		str.append(c.getIDKH());
@@ -429,21 +498,21 @@ public class Controller {
 		String t = str.toString();
 		return t;
 	}
-	public String RanmdomIDHoaDon(Employee e, Customer c,Promotion p) throws NoSuchAlgorithmException
-	{
-		String input = IDStringConvert(e,c,p);
+
+	public String RanmdomIDHoaDon(Employee e, Customer c, Promotion p) throws NoSuchAlgorithmException {
+		String input = IDStringConvert(e, c, p);
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] hash = md.digest(input.getBytes());
-        
-        StringBuilder sb = new StringBuilder();
-        for (byte b : hash) {
-            sb.append(String.format("%02x", b));
-        }
-        
-        String uniqueID = sb.toString().substring(0, 10);
-        return uniqueID;
+		byte[] hash = md.digest(input.getBytes());
+
+		StringBuilder sb = new StringBuilder();
+		for (byte b : hash) {
+			sb.append(String.format("%02x", b));
+		}
+
+		String uniqueID = sb.toString().substring(0, 10);
+		return uniqueID;
 	}
-	
+
 	public int checkProductinListOrder(Order order) {
 
 		for (var i : listOrder) {
@@ -454,7 +523,7 @@ public class Controller {
 		}
 		return -1;
 	}
-	
+
 	public void addProductToOrder(Order od, boolean flag) {
 		// flag is true == update
 		// flag is false == new order
@@ -510,70 +579,67 @@ public class Controller {
 	}
 
 	@SuppressWarnings("deprecation")
-	public DateConvert dateConvert(JDateChooser dataChooser)
-	{
-		return new DateConvert(dataChooser.getDate().getDate(), dataChooser.getDate().getMonth()+1, dataChooser.getDate().getYear()+1900);
+	public DateConvert dateConvert(JDateChooser dataChooser) {
+		return new DateConvert(dataChooser.getDate().getDate(), dataChooser.getDate().getMonth() + 1,
+				dataChooser.getDate().getYear() + 1900);
 	}
-	
-	public void initActionEmployee()
-	{
+
+	public void initActionEmployee() {
 		view.createEmployeeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CreateEmployee ce = new CreateEmployee(null);
 				ce.setVisible(true);
 				ce.btnCancelEmployee.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						int result = JOptionPane.showConfirmDialog(ce.btnCancelEmployee, "Do you want to exit?", "Confirmation", JOptionPane.OK_CANCEL_OPTION);
+						int result = JOptionPane.showConfirmDialog(ce.btnCancelEmployee, "Do you want to exit?",
+								"Confirmation", JOptionPane.OK_CANCEL_OPTION);
 						if (result == JOptionPane.OK_OPTION) {
 							ce.State = false;
 							ce.dispose();
 						}
-						
+
 					}
 				});
-				
-				//nút thêm nhân viên
+
+				// nút thêm nhân viên
 				ce.btnSaveEmployee.addActionListener(new ActionListener() {
-					
+
 					@SuppressWarnings("deprecation")
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						if(checkInfo(ce) == false)
-						{
+						if (checkInfo(ce) == false) {
 							JOptionPane.showMessageDialog(ce.addEmployee, "Please enter complete information!");
-						}
-						else
-						{
-							//Employee em = new Employee(ce.IDField.getText(), ce.nameField.getText(), ce.dateChooser.getDateFormatString(), ce.CCCDField.getText(), ce.phoneField.getText(), ce.bg.getSelection().toString(), ce.lblAvatar.getText(), ce.cboPosition.getSelectedItem().toString(), ce.dateChooser1.getDateFormatString(), ce.employeeUsernameField.getText(), ce.employeePasswordField.getSelectedText());
-							
+						} else {
+							// Employee em = new Employee(ce.IDField.getText(), ce.nameField.getText(),
+							// ce.dateChooser.getDateFormatString(), ce.CCCDField.getText(),
+							// ce.phoneField.getText(), ce.bg.getSelection().toString(),
+							// ce.lblAvatar.getText(), ce.cboPosition.getSelectedItem().toString(),
+							// ce.dateChooser1.getDateFormatString(), ce.employeeUsernameField.getText(),
+							// ce.employeePasswordField.getSelectedText());
+
 							String selectedDate = (String) (ce.dateChooser.getDate().toString());
 							DateConvert dc = dateConvert(ce.dateChooser);
 							String selectedDate1 = (String) (ce.dateChooser1.getDate().toString());
 							DateConvert dc1 = dateConvert(ce.dateChooser1);
-						    String selectedOption = "";
-						    if(ce.rdoMale.isSelected())
-						    {
-						    	selectedOption = ce.rdoMale.getText();
-						    }
-						    else
-						    {
-						    	selectedOption = ce.rdoFemale.getText();
-						    }
-						    String position = "";
-						    if(ce.cboPosition.getSelectedItem() == "Nhân viên")
-						    {
-						    	position = "CV002";
-						    }
-						    else
-						    {
-						    	position = "CV001";
-						    }
+							String selectedOption = "";
+							if (ce.rdoMale.isSelected()) {
+								selectedOption = ce.rdoMale.getText();
+							} else {
+								selectedOption = ce.rdoFemale.getText();
+							}
+							String position = "";
+							if (ce.cboPosition.getSelectedItem() == "Nhân viên") {
+								position = "CV002";
+							} else {
+								position = "CV001";
+							}
 							try {
-								EmployeeDAO.insertEmployee1(ce.IDField.getText(), ce.nameField.getText(), dc.toString(), ce.CCCDField.getText(), ce.phoneField.getText(), 
-										selectedOption.toString(), destination.toString(), position.toString(), 
-										dc1.toString(), ce.employeeUsernameField.getText(), ce.employeePasswordField.getText());
+								EmployeeDAO.insertEmployee1(ce.IDField.getText(), ce.nameField.getText(), dc.toString(),
+										ce.CCCDField.getText(), ce.phoneField.getText(), selectedOption.toString(),
+										destination.toString(), position.toString(), dc1.toString(),
+										ce.employeeUsernameField.getText(), ce.employeePasswordField.getText());
 								emoloyeeDAO.getData();
 								JOptionPane.showMessageDialog(ce.addEmployee, "Save success!");
 								ce.dispose();
@@ -589,99 +655,99 @@ public class Controller {
 						}
 					}
 				});
-				//nút load hình đại diện
+				// nút load hình đại diện
 				ce.btnNewButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Create a file chooser
-				        JFileChooser fc = new JFileChooser();
-				        int result = fc.showOpenDialog(null);
+						JFileChooser fc = new JFileChooser();
+						int result = fc.showOpenDialog(null);
 
-				        // Make sure that a file was chosen, else exit
-				        if (result != JFileChooser.APPROVE_OPTION) {
-				            System.exit(0);
-				        }
+						// Make sure that a file was chosen, else exit
+						if (result != JFileChooser.APPROVE_OPTION) {
+							System.exit(0);
+						}
 
-				        // Get file path
-				        String path = fc.getSelectedFile().getAbsolutePath();
+						// Get file path
+						String path = fc.getSelectedFile().getAbsolutePath();
 
-				        String existingFolderPath = "src/img";
-				        File folder = new File(existingFolderPath);
-				        if (!folder.exists()) {
-				            boolean success = folder.mkdir();
-				            if (!success) {
-				                System.err.println("Failed to create directory: images");
-				                System.exit(1);
-				            }
-				        }
+						String existingFolderPath = "src/img";
+						File folder = new File(existingFolderPath);
+						if (!folder.exists()) {
+							boolean success = folder.mkdir();
+							if (!success) {
+								System.err.println("Failed to create directory: images");
+								System.exit(1);
+							}
+						}
 
-				        // Get the destination path for the new image (image.jpg will be the new name)
-				        destination = folder.getAbsolutePath() + File.separator + "image.jpg";
+						// Get the destination path for the new image (image.jpg will be the new name)
+						destination = folder.getAbsolutePath() + File.separator + "image.jpg";
 
-				        try {
-				            // Copy file from source to destination
-				            FileChannel source = new FileInputStream(path).getChannel();
-				            FileChannel dest = new FileOutputStream(destination).getChannel();
-				            dest.transferFrom(source, 0, source.size());
+						try {
+							// Copy file from source to destination
+							FileChannel source = new FileInputStream(path).getChannel();
+							FileChannel dest = new FileOutputStream(destination).getChannel();
+							dest.transferFrom(source, 0, source.size());
 
-				            // Close the channels
-				            source.close();
-				            dest.close();
-				            System.out.println("File copied successfully.");
-				        } catch (IOException e1) {
-				            e1.printStackTrace();
-				        }
-				        Image img = new ImageIcon(destination).getImage().getScaledInstance(215, 309,Image.SCALE_SMOOTH);
-				        ce.lblAvatar.setIcon(new ImageIcon(img));
+							// Close the channels
+							source.close();
+							dest.close();
+							System.out.println("File copied successfully.");
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+						Image img = new ImageIcon(destination).getImage().getScaledInstance(215, 309,
+								Image.SCALE_SMOOTH);
+						ce.lblAvatar.setIcon(new ImageIcon(img));
 					}
 				});
-				
+
 				view.btnReset.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						view.employeeNameFind.setText("");
 						view.employeePhoneFind.setText("");
 					}
 				});
-				
+
 				view.btnFind.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						String tenNhanVien = view.employeeNameField.getText();
 						String sdt = view.employeePhoneField.getText();
-						
-						System.out.println(tenNhanVien+ sdt); 
-						
+
+						System.out.println(tenNhanVien + sdt);
+
 					}
 				});
 			}
 		});
-		
+
 		view.btnUpdateEmployee.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DateConvert dc = dateConvert(view.employeeDateField);
-			    String position = "";
-			    if(view.cboPositionEmployee.getSelectedItem() == "Nhân viên")
-			    {
-			    	position = "CV002";
-			    }
-			    else
-			    {
-			    	position = "CV001";
-			    }
+				String position = "";
+				if (view.cboPositionEmployee.getSelectedItem() == "Nhân viên") {
+					position = "CV002";
+				} else {
+					position = "CV001";
+				}
 				try {
-					EmployeeDAO.updateEmployee(view.employeeIDField.getText(), view.employeeNameField.getText(), dc.toString(), view.employeeCCCDField.getText(), view.employeePhoneField.getText(), position.toString());
+					EmployeeDAO.updateEmployee(view.employeeIDField.getText(), view.employeeNameField.getText(),
+							dc.toString(), view.employeeCCCDField.getText(), view.employeePhoneField.getText(),
+							position.toString());
 					emoloyeeDAO.getData();
 					JOptionPane.showMessageDialog(view.employeePanelTab(), "Update success!");
 				} catch (SQLException e1) {
 					e1.printStackTrace();
-				}	
+				}
 			}
 		});
-		
+
 		view.employeeTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -691,51 +757,43 @@ public class Controller {
 				try {
 					date2 = new SimpleDateFormat("yyyy-MM-dd").parse(d);
 					view.employeeDateField.setDate(date2);
-					if(r<0)
-					{
+					if (r < 0) {
 						return;
 					}
 					view.employeeIDField.setText(view.employeeTable.getValueAt(r, 0).toString());
 					view.employeeNameField.setText(view.employeeTable.getValueAt(r, 1).toString());
 					view.employeeDateField.setDate(date2);
-				    view.employeePhoneField.setText(view.employeeTable.getValueAt(r, 3).toString());
-					view.employeeCCCDField.setText(view.employeeTable.getValueAt(r, 4).toString());	
-					if(view.employeeTable.getValueAt(r, 5).toString() == "CV001")
-					{
+					view.employeePhoneField.setText(view.employeeTable.getValueAt(r, 3).toString());
+					view.employeeCCCDField.setText(view.employeeTable.getValueAt(r, 4).toString());
+					if (view.employeeTable.getValueAt(r, 5).toString() == "CV001") {
 						view.cboPositionEmployee.getModel().setSelectedItem("Quản lý");
-					}
-					else if (view.employeeTable.getValueAt(r, 5).toString() == "CV002")
-					{
+					} else if (view.employeeTable.getValueAt(r, 5).toString() == "CV002") {
 						view.cboPositionEmployee.getModel().setSelectedItem("Nhân viên");
 					}
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
-				
+
 			}
 		});
-		
+
 		view.btnChangePassword.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ChangePassword cp = new ChangePassword();
 				cp.setVisible(true);
 				cp.btnSave.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						if(checkPassword(cp) == false)
-						{
+						if (checkPassword(cp) == false) {
 							JOptionPane.showMessageDialog(cp.panel, "Please enter complete information!");
-						}
-						else
-						{
+						} else {
 							try {
 								EmployeeDAO.changePassword("abc", cp.XacNhanMKField.getText());
 								emoloyeeDAO.getData();
 								JOptionPane.showMessageDialog(view.employeePanelTab(), "Update success!");
-							}catch (Exception e1) {
+							} catch (Exception e1) {
 								// TODO: handle exception
 								e1.printStackTrace();
 							}
@@ -745,29 +803,27 @@ public class Controller {
 			}
 		});
 	}
-	
-	public boolean checkPassword(ChangePassword cp)
-	{
-		if(cp.MKHienTaiField.getText().isEmpty() || cp.MKCuField.getText().isEmpty() || cp.XacNhanMKField.getText().isEmpty())
-		{
+
+	public boolean checkPassword(ChangePassword cp) {
+		if (cp.MKHienTaiField.getText().isEmpty() || cp.MKCuField.getText().isEmpty()
+				|| cp.XacNhanMKField.getText().isEmpty()) {
 			return false;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
-	
-	public boolean checkInfo(CreateEmployee ce)
-	{
-		if(ce.IDField.getText().trim().isEmpty() || ce.nameField.getText().trim().isEmpty() || ce.dateChooser.getDate()==null || ce.CCCDField.getText().trim().isEmpty() || ce.phoneField.getText().trim().isEmpty() || ce.bg.isSelected(null) || ce.dateChooser1.getDate()==null)
-		{
+
+	public boolean checkInfo(CreateEmployee ce) {
+		if (ce.IDField.getText().trim().isEmpty() || ce.nameField.getText().trim().isEmpty()
+				|| ce.dateChooser.getDate() == null || ce.CCCDField.getText().trim().isEmpty()
+				|| ce.phoneField.getText().trim().isEmpty() || ce.bg.isSelected(null)
+				|| ce.dateChooser1.getDate() == null) {
 			return false;
-		}
-		else{
+		} else {
 			return true;
 		}
 	}
-	
+
 	public void loadPanelOrder() throws SQLException {
 		List<TypeProduct> listType = typeProductDAO.getData();
 		List<Product> listProduct = productDAO.getData();

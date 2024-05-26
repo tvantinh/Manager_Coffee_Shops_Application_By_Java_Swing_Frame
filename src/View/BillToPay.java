@@ -53,22 +53,46 @@ public class BillToPay extends JFrame{
 	public JLabel totalLabel;
 	public Label timeLabel;
 	public JTextArea noteText;
+	public Label billNumberLabel;
 	public Promotion promotion = new Promotion("KM000","",1,"","");
 	public Customer customer = new Customer("KH0VL","","","","","");
+	public JButton registerCustomer;
 	public BillToPay(Employee employee,List<Order> listOrder,String netTotal) throws SQLException {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(BillToPay.class.getResource("/img/Logo.png")));
 		initialize(employee,listOrder,netTotal);
 		
 	}
 
+	public int getTotal()
+	{
+		return Integer.valueOf(totalLabel.getText());
+		
+	}
+	public Promotion getPromotion()
+	{
+		return promotion;
+		
+	}
 	public void setPromotion(Promotion p)
 	{
 		promotion = p;
 	}
-	
+	public void setCustomer(Customer c)
+	{
+		customer = c;
+	}
 	public void update(int i1, int i2) {
 		int pay = i1 - i2;
 		changeLabel.setText(String.valueOf(pay));
+	}
+	public void setNote(String p)
+	{
+		noteText.append(p);
+	}
+	public String getNote()
+	{
+		return noteText.getText();
+		
 	}
 	private void initialize(Employee employee,List<Order> listOrder,String netTotal) {
 		this.setBounds(100, 100, 450, 660);
@@ -100,10 +124,6 @@ public class BillToPay extends JFrame{
 		lblNewLabel_4.setBounds(34, 114, 46, 14);
 		this.getContentPane().add(lblNewLabel_4);
 		
-		JLabel lblNewLabel_5 = new JLabel("Code Bill:");
-		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblNewLabel_5.setBounds(34, 139, 60, 14);
-		this.getContentPane().add(lblNewLabel_5);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(34, 169, 335, 2);
@@ -182,10 +202,6 @@ public class BillToPay extends JFrame{
 		servLabel.setBounds(83, 114, 286, 14);
 		this.getContentPane().add(servLabel);
 		
-		Label codeBillLabel = new Label("New label");
-		codeBillLabel.setAlignment(Label.RIGHT);
-		codeBillLabel.setBounds(93, 139, 276, 14);
-		this.getContentPane().add(codeBillLabel);
 		
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setBounds(34, 509, 335, 2);
@@ -248,9 +264,9 @@ public class BillToPay extends JFrame{
 		nameCustomerLabel.setBounds(140, 312, 140, 14);
 		getContentPane().add(nameCustomerLabel);
 		
-		JButton btnNewButton_1 = new JButton("Register");
-		btnNewButton_1.setBounds(278, 308, 91, 23);
-		getContentPane().add(btnNewButton_1);
+		registerCustomer = new JButton("Register");
+		registerCustomer.setBounds(278, 308, 91, 23);
+		getContentPane().add(registerCustomer);
 		
 		useVIPbtn = new JButton("Use VIP privileges");
 		useVIPbtn.setEnabled(false);
@@ -276,5 +292,14 @@ public class BillToPay extends JFrame{
 		JLabel lblNewLabel_13 = new JLabel("(Including VAT 10%)");
 		lblNewLabel_13.setBounds(34, 447, 116, 14);
 		getContentPane().add(lblNewLabel_13);
+		
+		Label label_2 = new Label("Bill Number :");
+		label_2.setBounds(32, 141, 62, 14);
+		getContentPane().add(label_2);
+		
+		billNumberLabel = new Label("");
+		billNumberLabel.setAlignment(Label.RIGHT);
+		billNumberLabel.setBounds(105, 142, 264, 14);
+		getContentPane().add(billNumberLabel);
 	}
 }
