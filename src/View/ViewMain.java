@@ -7,26 +7,19 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -50,10 +43,10 @@ import javax.swing.table.TableColumn;
 import com.toedter.calendar.JDateChooser;
 
 import ModelApp.Object.Employee;
+import ModelApp.Object.TypeProduct;
 import TableModel.BillTableModel;
 import TableModel.CustomerTableModel;
 import TableModel.EmployeeTableModel;
-import TableModel.InventoryTableModel;
 import TableModel.ProductTableModel;
 import TableModel.PromotionTableModel;
 import TableModel.TypeInventoryTableModel;
@@ -77,44 +70,44 @@ public class ViewMain extends JFrame {
 			24, Image.SCALE_SMOOTH);
 	private Image avataDemo = new ImageIcon(ViewMain.class.getResource("/img/avataDemo.jpg")).getImage()
 			.getScaledInstance(68, 109, Image.SCALE_SMOOTH);
-	private JTextField searchTypeProductTextField;
-	private JTextField searchTypeInventoryTextField;
-	private JTextField IDTypeProductTextField;
-	private JTextField IDTypeInventoryTextField;
-	private JTextField nameTypeProductTextField;
-	private JTextField nameTypeInventoryTextField;
-	private JTextField searchProductTextField;
-	private JTextField searchInventoryTextField;
-	private JTextField IDProductTextField;
-	private JTextField IDInventoryTextField;
-	private JTextField nameProductTextField;
-	private JTextField nameInventoryTextField;
-	private JTextField priceProductTextField;
-	private JTextField priceInventoryTextField;
-	private JTextField textField;
+	public JTextField searchTypeProductTextField;
+	public JTextField searchTypeInventoryTextField;
+	public JTextField IDTypeProductTextField;
+	public JTextField IDTypeInventoryTextField;
+	public JTextField nameTypeProductTextField;
+	public JTextField nameTypeInventoryTextField;
+	public JTextField searchProductTextField;
+	public JTextField searchInventoryTextField;
+	public JTextField IDProductTextField;
+	public JTextField IDInventoryTextField;
+	public JTextField nameProductTextField;
+	public JTextField nameInventoryTextField;
+	public JTextField priceProductTextField;
+	public JTextField priceInventoryTextField;
+	public JTextField txtnd;
 	public JTextField txtidbill;
-	private JTextField textField_1;
+	public JTextField txtgiamgia;
 	public JTextField txtdate;
-	private JTextField textField_2;
+	public JTextField txtngaybd;
 	public JTextField txttotal;
-	private JTextField textField_3;
-	public  JTextField txtemp;
+	public JTextField txtngaykt;
+	public JTextField txtemp;
 	public JTextField txtcus;
 	public JTextField txtidpromotion;
 	public JTextField txtnote;
+	public JButton btnadd;
+	public JButton btnupdate;
+	public JButton btnxoa;
+	public JTextField txttim;
+	public JButton btnTim;
+	public JTextField txtid;
 	// khai bao cho employee
 	public JTextField employeePhoneFind;
-	private JTextField textField_4;
 	public JTextField employeeNameFind;
-	private JTextField textField_5;
 	public JTextField employeeDateField1;
-	private JTextField textField_6;
 	public JTextField employeeNameField;
-	private JTextField textField_7;
 	public JTextField employeeIDField;
-	private JTextField textField_8;
 	public JTextField employeePhoneField;
-	private JTextField textField_9;
 	public JTextField employeeCCCDField;
 	public JDateChooser employeeDateField;
 	public JTable employeeTable;
@@ -122,40 +115,63 @@ public class ViewMain extends JFrame {
 	public JButton createEmployeeButton;
 	public JButton btnFind;
 	public JButton btnReset;
-	public JButton btnNewButton_4;
+	public JButton btnDeleteEmployee;
 	public JButton btnUpdateEmployee;
 	public JButton btnChangePassword;
 	public JButton logoutButton;
 	public Employee em = new Employee();
+
+	// KHAI BÁO CUSTOMER
+	public JButton btnAddCustomer;
+	public JButton btnFindCustomer;
+	public JButton btnResetCustomer;
+	public JTextField customerNameFind;
+	public JTextField customerPhoneFind;
+	public JTextField customerIDField;
+	public JTextField customerNameField;
+	public JTextField customerEmailField;
+	public JTextField customerPhoneField;
+	public JTextField customerAddressField;
+	public JButton btnDeleteCustomer;
+	public JButton btnUpdateCustomer;
+
+	//
+	public JLabel searchTypebtn;
+	public JButton resetTypeProductbtn;
+	public JButton createTypeProductbtn;
+	public JButton resetProductbtn;
+	public JButton updateProductChoosebtn;
+	public JComboBox<String> UnitProductComboBox;
+	public JComboBox<TypeProduct> typeProductComboBox;
+	public JLabel searchProductbtn;
+
+	public JPanel Type_panel;
+	public JPanel Product_panel;
+
+	public JButton updateTypeChoosebtn;
+	public JButton deleteTypeProductchoosebtn;
+	public JButton deleteProductChoosebtn;
+	public JButton createProductbtn;
 
 	public JLabel nameEmployeeLabel;
 	public JLabel castLabel;
 	public JLabel VATLabel;
 	public JLabel totalLabel;
 	public JButton payBillOrderButton;
-	private JTable productTable = new JTable();
-	private JTable typeProductTable = new JTable();
-	private JTable inventoryTable = new JTable();
-	private JTable typeInventoryTable = new JTable();
-	private JTable customerTable = new JTable();
-	private JTable promotionTable = new JTable();
-	
+	public JTable productTable = new JTable();
+	public JTable typeProductTable = new JTable();
+	public JTable typeInventoryTable = new JTable();
+	public JTable customerTable = new JTable();
+	public JTable promotionTable = new JTable();
+
 	public JTable billTable = new JTable();
-	
+
 	public JTabbedPane productsTabed = new JTabbedPane(JTabbedPane.BOTTOM);
 	public JTable tableOrder;
 	public JPanel componentOfBillPanel;
-
-	private JTextField textField_11;
-	private JTextField textField_12;
-	private JTextField textField_13;
-	private JTextField textField_14;
-	private JTextField textField_15;
 	public DefaultTableModel OrdertableModel = new DefaultTableModel();
+	public JTextField GiaUpSizeTextField;
 
-	/**
-	 * Create the application.
-	 */
 	public ViewMain(Employee em) {
 
 		this.em = em;
@@ -221,20 +237,18 @@ public class ViewMain extends JFrame {
 		tabbedPane.addTab("ORDER", null, newOrderPanelTab, null);
 		JPanel productsPanelTab = productsPanelTab();
 		tabbedPane.addTab("PRODUCTS", null, productsPanelTab, null);
-		JPanel inventoryPanelTab = inventoryPanelTab();
-		tabbedPane.addTab("INVENTORY", null, inventoryPanelTab, null);
 		JPanel statisticPanelTab = statisticPanelTab();
 		tabbedPane.addTab("STATISTIC", null, statisticPanelTab, null);
 		JPanel promotionPanelTab = promotionPanelTab();
 		tabbedPane.addTab("PROMOTION", null, promotionPanelTab, null);
-		
+
 		JPanel employeePanelTab;
 		employeePanelTab = employeePanelTab();
-		if(em.getIDChucVu().equals("CV001"))
+		if (em.getIDChucVu().equals("CV001"))
 			employeePanelTab.setEnabled(false);
 		else
-			
-		tabbedPane.addTab("EMPLOYEE", null, employeePanelTab, null);
+
+			tabbedPane.addTab("EMPLOYEE", null, employeePanelTab, null);
 		JPanel customerPanelTab = customerPanelTab();
 		tabbedPane.addTab("CUSTOMER", null, customerPanelTab, null);
 		JPanel accountPanelTab = accountPanelTab();
@@ -265,16 +279,6 @@ public class ViewMain extends JFrame {
 		productLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		productLabel.setFont(new Font("Arial", Font.BOLD, 17));
 		menuPanel.add(productLabel);
-		JLabel inventoryLabel = new JLabel("INVENTORY");
-		inventoryLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				tabbedPane.setSelectedIndex(2);
-			}
-		});
-		inventoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		inventoryLabel.setFont(new Font("Arial", Font.BOLD, 17));
-		menuPanel.add(inventoryLabel);
 		JLabel statictisLabel = new JLabel("STATISTICS");
 		statictisLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -366,20 +370,24 @@ public class ViewMain extends JFrame {
 
 	}
 
+	public void setComboBoxTypeProduct(List<TypeProduct> list) {
+
+		for (TypeProduct i : list) {
+			typeProductComboBox.addItem(i);
+		}
+	}
+
 	// set data table default
 	public void setDataTableProduct(ProductTableModel productTableModel) {
 		productTable.setModel(productTableModel);
 	}
+
 	public void setDataTableBillHistory(BillTableModel billHistoryTableModel) {
 		billTable.setModel(billHistoryTableModel);
 	}
 
 	public void setDataTableTypeProduct(TypeProductTableModel typeProductTableModel) {
 		typeProductTable.setModel(typeProductTableModel);
-	}
-
-	public void setDataTableInventory(InventoryTableModel inventoryTableModel) {
-		inventoryTable.setModel(inventoryTableModel);
 	}
 
 	public void setDataTableTypeInventory(TypeInventoryTableModel typeInventoryTableModel) {
@@ -550,31 +558,31 @@ public class ViewMain extends JFrame {
 		TypeProductTable.setPreferredSize(new Dimension(0, 100));
 		typeProductsPanel.add(TypeProductTable);
 
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(
+		Type_panel = new JPanel();
+		Type_panel.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Action",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		typeProductsPanel.add(panel);
-		panel.setLayout(null);
+		typeProductsPanel.add(Type_panel);
+		Type_panel.setLayout(null);
 
 		JLabel lblNewLabel_16 = new JLabel("Search : ");
 		lblNewLabel_16.setBounds(10, 50, 46, 14);
-		panel.add(lblNewLabel_16);
+		Type_panel.add(lblNewLabel_16);
 
 		searchTypeProductTextField = new JTextField();
 		searchTypeProductTextField.setBounds(58, 47, 357, 20);
-		panel.add(searchTypeProductTextField);
+		Type_panel.add(searchTypeProductTextField);
 		searchTypeProductTextField.setColumns(10);
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Update", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.setBounds(1, 72, 571, 81);
-		panel.add(panel_1);
+		Type_panel.add(panel_1);
 		panel_1.setLayout(null);
 
-		JButton btnNewButton_2 = new JButton("update");
-		btnNewButton_2.setBounds(472, 43, 89, 23);
-		panel_1.add(btnNewButton_2);
+		updateTypeChoosebtn = new JButton("update");
+		updateTypeChoosebtn.setBounds(472, 43, 89, 23);
+		panel_1.add(updateTypeChoosebtn);
 
 		JLabel lblNewLabel_18 = new JLabel("ID :");
 		lblNewLabel_18.setBounds(10, 22, 46, 14);
@@ -595,18 +603,32 @@ public class ViewMain extends JFrame {
 		panel_1.add(nameTypeProductTextField);
 		nameTypeProductTextField.setColumns(10);
 
-		JLabel lblNewLabel_17 = new JLabel("");
-		lblNewLabel_17.setIcon(new ImageIcon(findImg));
-		lblNewLabel_17.setBounds(425, 43, 32, 24);
-		panel.add(lblNewLabel_17);
+		deleteTypeProductchoosebtn = new JButton("delete");
+		deleteTypeProductchoosebtn.setBounds(472, 18, 89, 23);
+		panel_1.add(deleteTypeProductchoosebtn);
 
-		JButton btnNewButton_1 = new JButton("reset");
-		btnNewButton_1.setBounds(473, 46, 89, 23);
-		panel.add(btnNewButton_1);
+		searchTypebtn = new JLabel("");
+		searchTypebtn.setIcon(new ImageIcon(findImg));
+		searchTypebtn.setBounds(425, 43, 32, 24);
+		Type_panel.add(searchTypebtn);
 
-		JButton btnNewButton_1_1_1_1 = new JButton("Create Type");
-		btnNewButton_1_1_1_1.setBounds(473, 11, 89, 23);
-		panel.add(btnNewButton_1_1_1_1);
+		resetTypeProductbtn = new JButton("reset");
+		resetTypeProductbtn.setBounds(473, 46, 89, 23);
+		Type_panel.add(resetTypeProductbtn);
+
+		createTypeProductbtn = new JButton("Create Type");
+		createTypeProductbtn.setBounds(458, 11, 104, 23);
+		Type_panel.add(createTypeProductbtn);
+
+		JButton newTypebtn = new JButton("New Type");
+		newTypebtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				IDTypeProductTextField.setText("");
+				nameTypeProductTextField.setText("");
+			}
+		});
+		newTypebtn.setBounds(357, 11, 89, 23);
+		Type_panel.add(newTypebtn);
 
 		JPanel productPanel = new JPanel();
 		productPanel.setBorder(new TitledBorder(null, "Products", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -620,47 +642,39 @@ public class ViewMain extends JFrame {
 		ProductTable.setPreferredSize(new Dimension(0, 150));
 		productPanel.add(ProductTable);
 
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(
+		Product_panel = new JPanel();
+		Product_panel.setBorder(new TitledBorder(
 				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Action",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		productPanel.add(panel_2);
-		panel_2.setLayout(null);
+		productPanel.add(Product_panel);
+		Product_panel.setLayout(null);
 
 		JLabel lblNewLabel_16_1 = new JLabel("Search : ");
 		lblNewLabel_16_1.setBounds(9, 75, 46, 14);
-		panel_2.add(lblNewLabel_16_1);
+		Product_panel.add(lblNewLabel_16_1);
 
 		searchProductTextField = new JTextField();
 		searchProductTextField.setColumns(10);
 		searchProductTextField.setBounds(57, 72, 359, 20);
-		panel_2.add(searchProductTextField);
+		Product_panel.add(searchProductTextField);
 
-		JLabel lblNewLabel_17_1 = new JLabel(new ImageIcon(findImg));
-		lblNewLabel_17_1.setBounds(435, 71, 32, 24);
-		panel_2.add(lblNewLabel_17_1);
+		searchProductbtn = new JLabel(new ImageIcon(findImg));
+		searchProductbtn.setBounds(435, 71, 32, 24);
+		Product_panel.add(searchProductbtn);
 
-		JButton btnNewButton_1_1 = new JButton("reset");
-		btnNewButton_1_1.setBounds(488, 71, 89, 23);
-		panel_2.add(btnNewButton_1_1);
-
-		JLabel lblNewLabel_16_1_1 = new JLabel("Type : ");
-		lblNewLabel_16_1_1.setBounds(9, 104, 46, 14);
-		panel_2.add(lblNewLabel_16_1_1);
-
-		JComboBox searchTypeProductComboBox = new JComboBox();
-		searchTypeProductComboBox.setBounds(57, 100, 359, 22);
-		panel_2.add(searchTypeProductComboBox);
+		resetProductbtn = new JButton("reset");
+		resetProductbtn.setBounds(488, 71, 89, 23);
+		Product_panel.add(resetProductbtn);
 
 		JPanel panel_1_1 = new JPanel();
 		panel_1_1.setLayout(null);
 		panel_1_1.setBorder(new TitledBorder(null, "Update", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1_1.setBounds(10, 140, 575, 200);
-		panel_2.add(panel_1_1);
+		Product_panel.add(panel_1_1);
 
-		JButton btnNewButton_2_1 = new JButton("update");
-		btnNewButton_2_1.setBounds(468, 168, 89, 23);
-		panel_1_1.add(btnNewButton_2_1);
+		updateProductChoosebtn = new JButton("update");
+		updateProductChoosebtn.setBounds(468, 168, 89, 23);
+		panel_1_1.add(updateProductChoosebtn);
 
 		JLabel lblNewLabel_18_1 = new JLabel("ID Product :");
 		lblNewLabel_18_1.setBounds(10, 22, 67, 14);
@@ -698,201 +712,45 @@ public class ViewMain extends JFrame {
 		lblNewLabel_19_1_3.setBounds(10, 139, 67, 14);
 		panel_1_1.add(lblNewLabel_19_1_3);
 
-		JComboBox UnitProductTextField = new JComboBox();
-		UnitProductTextField.setModel(new DefaultComboBoxModel(new String[] { "ly", "chai", "tui" }));
-		UnitProductTextField.setBounds(87, 75, 381, 22);
-		panel_1_1.add(UnitProductTextField);
+		UnitProductComboBox = new JComboBox<String>();
+		UnitProductComboBox.setModel(new DefaultComboBoxModel(new String[] { "Ly", "Chai", "Cái", "Tô", "Cuốn" }));
+		UnitProductComboBox.setBounds(87, 75, 381, 22);
+		panel_1_1.add(UnitProductComboBox);
 
-		JComboBox typeProductComboBox = new JComboBox();
+		typeProductComboBox = new JComboBox();
 		typeProductComboBox.setBounds(87, 135, 381, 22);
 		panel_1_1.add(typeProductComboBox);
 
-		JButton btnNewButton_1_1_1 = new JButton("Create Product");
-		btnNewButton_1_1_1.setBounds(488, 23, 89, 23);
-		panel_2.add(btnNewButton_1_1_1);
+		deleteProductChoosebtn = new JButton("delete");
+		deleteProductChoosebtn.setBounds(369, 168, 89, 23);
+		panel_1_1.add(deleteProductChoosebtn);
+
+		JLabel lblNewLabel_21 = new JLabel("Up Size :");
+		lblNewLabel_21.setBounds(10, 172, 46, 14);
+		panel_1_1.add(lblNewLabel_21);
+
+		GiaUpSizeTextField = new JTextField();
+		GiaUpSizeTextField.setBounds(87, 169, 257, 20);
+		panel_1_1.add(GiaUpSizeTextField);
+		GiaUpSizeTextField.setColumns(10);
+
+		createProductbtn = new JButton("Create Product");
+		createProductbtn.setBounds(488, 23, 89, 23);
+		Product_panel.add(createProductbtn);
+
+		JButton newProduct = new JButton("New Product");
+		newProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				IDProductTextField.setText("");
+				nameProductTextField.setText("");
+				priceProductTextField.setText("");
+				GiaUpSizeTextField.setText("");
+
+			}
+		});
+		newProduct.setBounds(374, 23, 104, 23);
+		Product_panel.add(newProduct);
 		return productsPanel;
-	}
-
-	public JPanel inventoryPanelTab() {
-		JPanel inventoryPanel = new JPanel();
-		inventoryPanel.setLayout(new BoxLayout(inventoryPanel, BoxLayout.Y_AXIS));
-
-		JPanel typeInventoryPanel = new JPanel();
-		typeInventoryPanel.setBorder(new TitledBorder(
-				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
-				"type Inventory", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		inventoryPanel.add(typeInventoryPanel);
-		typeInventoryPanel.setLayout(new GridLayout(0, 2, 0, 0));
-
-		JScrollPane sc = new JScrollPane();
-		sc.setViewportView(typeInventoryTable);
-
-		sc.setPreferredSize(new Dimension(0, 100));
-		typeInventoryPanel.add(sc);
-
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(
-				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Action",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		typeInventoryPanel.add(panel);
-		panel.setLayout(null);
-
-		JLabel lblNewLabel_16 = new JLabel("Search : ");
-		lblNewLabel_16.setBounds(10, 50, 46, 14);
-		panel.add(lblNewLabel_16);
-
-		searchTypeInventoryTextField = new JTextField();
-		searchTypeInventoryTextField.setBounds(58, 47, 357, 20);
-		panel.add(searchTypeInventoryTextField);
-		searchTypeInventoryTextField.setColumns(10);
-
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(null, "Update", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(1, 72, 571, 81);
-		panel.add(panel_1);
-		panel_1.setLayout(null);
-
-		JButton btnNewButton_2 = new JButton("update");
-		btnNewButton_2.setBounds(472, 43, 89, 23);
-		panel_1.add(btnNewButton_2);
-
-		JLabel lblNewLabel_18 = new JLabel("ID :");
-		lblNewLabel_18.setBounds(10, 22, 46, 14);
-		panel_1.add(lblNewLabel_18);
-
-		JLabel lblNewLabel_19 = new JLabel("Type name :");
-		lblNewLabel_19.setBounds(10, 47, 67, 14);
-		panel_1.add(lblNewLabel_19);
-
-		IDTypeInventoryTextField = new JTextField();
-		IDTypeInventoryTextField.setEnabled(false);
-		IDTypeInventoryTextField.setBounds(87, 19, 381, 20);
-		panel_1.add(IDTypeInventoryTextField);
-		IDTypeInventoryTextField.setColumns(10);
-
-		nameTypeInventoryTextField = new JTextField();
-		nameTypeInventoryTextField.setBounds(87, 44, 381, 20);
-		panel_1.add(nameTypeInventoryTextField);
-		nameTypeInventoryTextField.setColumns(10);
-
-		JLabel lblNewLabel_17 = new JLabel("");
-		lblNewLabel_17.setIcon(new ImageIcon(findImg));
-		lblNewLabel_17.setBounds(425, 43, 32, 24);
-		panel.add(lblNewLabel_17);
-
-		JButton btnNewButton_1 = new JButton("reset");
-		btnNewButton_1.setBounds(473, 46, 89, 23);
-		panel.add(btnNewButton_1);
-
-		JButton btnNewButton_1_1_1_1 = new JButton("Create Type");
-		btnNewButton_1_1_1_1.setBounds(473, 11, 89, 23);
-		panel.add(btnNewButton_1_1_1_1);
-
-		JPanel InventoryPanel = new JPanel();
-		InventoryPanel.setBorder(new TitledBorder(
-				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Inventory",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		InventoryPanel.setBackground(new Color(255, 255, 255));
-		InventoryPanel.setPreferredSize(new Dimension(0, 300));
-		inventoryPanel.add(InventoryPanel);
-
-		InventoryPanel.setLayout(new GridLayout(0, 2, 0, 0));
-		JScrollPane sc2 = new JScrollPane();
-		sc2.setViewportView(inventoryTable);
-		sc2.setPreferredSize(new Dimension(0, 150));
-		InventoryPanel.add(sc2);
-
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(
-				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Action",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		InventoryPanel.add(panel_2);
-		panel_2.setLayout(null);
-
-		JLabel lblNewLabel_16_1 = new JLabel("Search : ");
-		lblNewLabel_16_1.setBounds(9, 75, 46, 14);
-		panel_2.add(lblNewLabel_16_1);
-
-		searchInventoryTextField = new JTextField();
-		searchInventoryTextField.setColumns(10);
-		searchInventoryTextField.setBounds(57, 72, 359, 20);
-		panel_2.add(searchInventoryTextField);
-
-		JLabel lblNewLabel_17_1 = new JLabel(new ImageIcon(findImg));
-		lblNewLabel_17_1.setBounds(435, 71, 32, 24);
-		panel_2.add(lblNewLabel_17_1);
-
-		JButton btnNewButton_1_1 = new JButton("reset");
-		btnNewButton_1_1.setBounds(488, 71, 89, 23);
-		panel_2.add(btnNewButton_1_1);
-
-		JLabel lblNewLabel_16_1_1 = new JLabel("Type : ");
-		lblNewLabel_16_1_1.setBounds(9, 104, 46, 14);
-		panel_2.add(lblNewLabel_16_1_1);
-
-		JComboBox searchTypeInventoryComboBox = new JComboBox();
-		searchTypeInventoryComboBox.setBounds(57, 100, 359, 22);
-		panel_2.add(searchTypeInventoryComboBox);
-
-		JPanel panel_1_1 = new JPanel();
-		panel_1_1.setLayout(null);
-		panel_1_1.setBorder(new TitledBorder(null, "Update", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1_1.setBounds(10, 140, 575, 200);
-		panel_2.add(panel_1_1);
-
-		JButton btnNewButton_2_1 = new JButton("update");
-		btnNewButton_2_1.setBounds(468, 168, 89, 23);
-		panel_1_1.add(btnNewButton_2_1);
-
-		JLabel lblNewLabel_18_1 = new JLabel("ID Inventory :");
-		lblNewLabel_18_1.setBounds(10, 22, 77, 14);
-		panel_1_1.add(lblNewLabel_18_1);
-
-		JLabel lblNewLabel_19_1 = new JLabel("Name  Inventory :");
-		lblNewLabel_19_1.setBounds(10, 47, 77, 14);
-		panel_1_1.add(lblNewLabel_19_1);
-
-		IDInventoryTextField = new JTextField();
-		IDInventoryTextField.setEnabled(false);
-		IDInventoryTextField.setColumns(10);
-		IDInventoryTextField.setBounds(87, 19, 381, 20);
-		panel_1_1.add(IDInventoryTextField);
-
-		nameInventoryTextField = new JTextField();
-		nameInventoryTextField.setColumns(10);
-		nameInventoryTextField.setBounds(87, 44, 381, 20);
-		panel_1_1.add(nameInventoryTextField);
-
-		JLabel lblNewLabel_19_1_1 = new JLabel("Unit :");
-		lblNewLabel_19_1_1.setBounds(10, 75, 67, 14);
-		panel_1_1.add(lblNewLabel_19_1_1);
-
-		priceInventoryTextField = new JTextField();
-		priceInventoryTextField.setColumns(10);
-		priceInventoryTextField.setBounds(87, 105, 381, 20);
-		panel_1_1.add(priceInventoryTextField);
-
-		JLabel lblNewLabel_19_1_2 = new JLabel("Price Inventory :");
-		lblNewLabel_19_1_2.setBounds(10, 108, 77, 14);
-		panel_1_1.add(lblNewLabel_19_1_2);
-
-		JLabel lblNewLabel_19_1_3 = new JLabel("Type :");
-		lblNewLabel_19_1_3.setBounds(10, 139, 67, 14);
-		panel_1_1.add(lblNewLabel_19_1_3);
-
-		JComboBox UnitInventoryTextField = new JComboBox();
-		UnitInventoryTextField.setModel(new DefaultComboBoxModel(new String[] { "ly", "chai", "tui" }));
-		UnitInventoryTextField.setBounds(87, 75, 381, 22);
-		panel_1_1.add(UnitInventoryTextField);
-
-		JComboBox typeInventoryComboBox = new JComboBox();
-		typeInventoryComboBox.setBounds(87, 135, 381, 22);
-		panel_1_1.add(typeInventoryComboBox);
-
-		JButton btnNewButton_1_1_1 = new JButton("Create Product");
-		btnNewButton_1_1_1.setBounds(488, 23, 89, 23);
-		panel_2.add(btnNewButton_1_1_1);
-		return inventoryPanel;
 	}
 
 	public JPanel promotionPanelTab() {
@@ -902,95 +760,79 @@ public class ViewMain extends JFrame {
 		panel_2.setBorder(new TitledBorder(null, "new promotion", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		promotionPanel.add(panel_2);
 
-		JLabel lblNewLabel = new JLabel("Mã khuyến mãi:");
+		JLabel lblNewLabel = new JLabel("ID Promotion:");
+		lblNewLabel.setBounds(42, 216, 102, 20);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
-		JLabel lblNewLabel_1 = new JLabel("Nội dung:");
+		JLabel lblNewLabel_1 = new JLabel("Content Promotion:");
+		lblNewLabel_1.setBounds(42, 261, 140, 20);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
-		JLabel lblNewLabel_2 = new JLabel("Giá giảm:");
+		JLabel lblNewLabel_2 = new JLabel("Discount: (%)");
+		lblNewLabel_2.setBounds(42, 308, 100, 20);
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
-		JLabel lblNewLabel_3 = new JLabel("Ngày bắt đầu:");
+		JLabel lblNewLabel_3 = new JLabel("Day Start:");
+		lblNewLabel_3.setBounds(42, 353, 71, 20);
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
-		JLabel lblNewLabel_4 = new JLabel("Ngày kết thúc:");
+		JLabel lblNewLabel_4 = new JLabel("Day End:");
+		lblNewLabel_4.setBounds(42, 398, 65, 20);
 		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
-		JButton btnNewButton = new JButton("Thêm");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtnd = new JTextField();
+		txtnd.setBounds(243, 254, 347, 27);
+		txtnd.setColumns(10);
 
-		textField = new JTextField();
-		textField.setColumns(10);
+		txtgiamgia = new JTextField();
+		txtgiamgia.setBounds(243, 301, 347, 27);
+		txtgiamgia.setColumns(10);
 
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
+		txtngaybd = new JTextField();
+		txtngaybd.setBounds(243, 346, 347, 27);
+		txtngaybd.setColumns(10);
 
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
+		txtngaykt = new JTextField();
+		txtngaykt.setBounds(243, 391, 347, 27);
+		txtngaykt.setColumns(10);
 
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
+		txtid = new JTextField();
+		txtid.setBounds(243, 209, 347, 27);
+		txtid.setColumns(10);
 
 		JLabel lblNewLabel_6 = new JLabel("");
+		lblNewLabel_6.setBounds(342, 83, 142, 70);
 		lblNewLabel_6.setIcon(new ImageIcon(ViewMain.class.getResource("/img/logosale.png")));
 
-		JButton btnNewButton_1_1_2 = new JButton("Thêm\r\n");
-		btnNewButton_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnadd = new JButton("Add");
+		btnadd.setBounds(243, 454, 89, 29);
 
-		JButton btnNewButton_1_1_3 = new JButton("Cập nhật");
-		btnNewButton_1_1_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
-		gl_panel_2.setHorizontalGroup(gl_panel_2.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_2
-				.createSequentialGroup()
-				.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_2.createSequentialGroup()
-						.addGap(94)
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING).addComponent(lblNewLabel)
-								.addComponent(lblNewLabel_1).addComponent(lblNewLabel_2).addComponent(lblNewLabel_3)
-								.addComponent(lblNewLabel_4))
-						.addGap(61)
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING, false).addComponent(textField_3)
-								.addComponent(textField_2).addComponent(textField_1).addComponent(textField)
-								.addComponent(textField_4, GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)))
-						.addGroup(gl_panel_2.createSequentialGroup().addGap(147).addComponent(btnNewButton,
-								GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)))
-				.addContainerGap(413, Short.MAX_VALUE))
-				.addGroup(
-						gl_panel_2.createSequentialGroup().addContainerGap(497, Short.MAX_VALUE)
-								.addComponent(lblNewLabel_6, GroupLayout.PREFERRED_SIZE, 142,
-										GroupLayout.PREFERRED_SIZE)
-								.addGap(260))
-				.addGroup(gl_panel_2.createSequentialGroup().addGap(285)
-						.addComponent(btnNewButton_1_1_2, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-						.addGap(18).addComponent(btnNewButton_1_1_3).addContainerGap(412, Short.MAX_VALUE)));
-		gl_panel_2.setVerticalGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup().addGap(65).addComponent(lblNewLabel_6).addGap(57)
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING).addComponent(lblNewLabel)
-								.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-						.addGap(18)
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING).addComponent(lblNewLabel_1)
-								.addComponent(textField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-						.addGap(20)
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING).addComponent(lblNewLabel_2)
-								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-						.addGap(18)
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING).addComponent(lblNewLabel_3)
-								.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-						.addGap(18)
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING).addComponent(lblNewLabel_4)
-								.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-						.addGap(36)
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnNewButton_1_1_2, GroupLayout.PREFERRED_SIZE, 29,
-										GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnNewButton_1_1_3, GroupLayout.PREFERRED_SIZE, 29,
-										GroupLayout.PREFERRED_SIZE))
-						.addGap(246)
-						.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)));
-		panel_2.setLayout(gl_panel_2);
+		btnadd.setFont(new Font("Tahoma", Font.PLAIN, 11));
+
+		btnupdate = new JButton("Update");
+		btnupdate.setBounds(506, 454, 83, 29);
+
+		btnupdate.setFont(new Font("Tahoma", Font.PLAIN, 11));
+
+		btnxoa = new JButton("Delete");
+		btnxoa.setBounds(400, 454, 77, 29);
+
+		btnxoa.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		panel_2.setLayout(null);
+		panel_2.add(lblNewLabel_6);
+		panel_2.add(lblNewLabel);
+		panel_2.add(lblNewLabel_1);
+		panel_2.add(lblNewLabel_2);
+		panel_2.add(lblNewLabel_3);
+		panel_2.add(lblNewLabel_4);
+		panel_2.add(btnadd);
+		panel_2.add(btnxoa);
+		panel_2.add(btnupdate);
+		panel_2.add(txtngaykt);
+		panel_2.add(txtngaybd);
+		panel_2.add(txtgiamgia);
+		panel_2.add(txtnd);
+		panel_2.add(txtid);
 
 		JPanel panel_3 = new JPanel();
 		promotionPanel.add(panel_3);
@@ -1001,98 +843,40 @@ public class ViewMain extends JFrame {
 		panel_3.add(panel_5);
 
 		JLabel lblNewLabel_5 = new JLabel("Tìm khuyến mãi");
-		lblNewLabel_5.setBounds(52, 30, 115, 20);
+		lblNewLabel_5.setBounds(71, 93, 115, 20);
 		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
 		JLabel lblNewLabel_5_1 = new JLabel("Trạng thái");
-		lblNewLabel_5_1.setBounds(361, 30, 86, 20);
+		lblNewLabel_5_1.setBounds(365, 93, 86, 20);
 		lblNewLabel_5_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
 		JScrollPane sc = new JScrollPane();
-		sc.setBounds(52, 90, 487, 180);
+		sc.setBounds(52, 185, 492, 386);
 
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(sc, popupMenu);
+
 		sc.setViewportView(promotionTable);
 
-		textField_5 = new JTextField();
-		textField_5.setBounds(52, 52, 179, 27);
-		textField_5.setColumns(10);
+		txttim = new JTextField();
+		txttim.setBounds(71, 115, 179, 27);
+		txttim.setColumns(10);
 
-		JButton btnNewButton_1_1_1 = new JButton("Tìm\r\n");
-		btnNewButton_1_1_1.setBounds(241, 49, 89, 29);
-		btnNewButton_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnTim = new JButton("Tìm\r\n");
+
+		btnTim.setBounds(266, 112, 89, 29);
+		btnTim.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] { "Đang hoạt động", "Không hoạt động" }));
-		comboBox.setBounds(361, 52, 178, 27);
+		comboBox.setBounds(366, 115, 178, 27);
 		panel_5.setLayout(null);
 		panel_5.add(sc);
 		panel_5.add(lblNewLabel_5);
-		panel_5.add(textField_5);
-		panel_5.add(btnNewButton_1_1_1);
+		panel_5.add(txttim);
+		panel_5.add(btnTim);
 		panel_5.add(lblNewLabel_5_1);
 		panel_5.add(comboBox);
-
-		JPanel panel_1_1 = new JPanel();
-		panel_1_1.setLayout(null);
-		panel_1_1.setBorder(new TitledBorder(null, "Update", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1_1.setBounds(26, 39, 575, 200);
-		panel_3.add(panel_1_1);
-
-		JButton btnNewButton_2_1 = new JButton("update");
-		btnNewButton_2_1.setBounds(473, 214, 89, 23);
-		panel_1_1.add(btnNewButton_2_1);
-
-		JLabel lblNewLabel_18_1 = new JLabel("ID Promotion :");
-		lblNewLabel_18_1.setBounds(33, 62, 77, 14);
-		panel_1_1.add(lblNewLabel_18_1);
-
-		JLabel lblNewLabel_19_1 = new JLabel("Content  Promotion :");
-		lblNewLabel_19_1.setBounds(33, 93, 106, 14);
-		panel_1_1.add(lblNewLabel_19_1);
-
-		textField_11 = new JTextField();
-		textField_11.setEnabled(false);
-		textField_11.setColumns(10);
-		textField_11.setBounds(191, 59, 371, 20);
-		panel_1_1.add(textField_11);
-
-		textField_12 = new JTextField();
-		textField_12.setColumns(10);
-		textField_12.setBounds(191, 90, 371, 20);
-		panel_1_1.add(textField_12);
-
-		JLabel lblNewLabel_19_1_1 = new JLabel("Discount : (%)");
-		lblNewLabel_19_1_1.setBounds(33, 124, 77, 14);
-		panel_1_1.add(lblNewLabel_19_1_1);
-
-		textField_13 = new JTextField();
-		textField_13.setColumns(10);
-		textField_13.setBounds(191, 152, 371, 20);
-		panel_1_1.add(textField_13);
-
-		JLabel lblNewLabel_19_1_2 = new JLabel("Day Start :");
-		lblNewLabel_19_1_2.setBounds(33, 155, 77, 14);
-		panel_1_1.add(lblNewLabel_19_1_2);
-
-		JLabel lblNewLabel_19_1_3 = new JLabel("Day End :");
-		lblNewLabel_19_1_3.setBounds(33, 186, 67, 14);
-		panel_1_1.add(lblNewLabel_19_1_3);
-
-		JButton btnNewButton_2_1_1 = new JButton("delete");
-		btnNewButton_2_1_1.setBounds(361, 214, 89, 23);
-		panel_1_1.add(btnNewButton_2_1_1);
-
-		textField_14 = new JTextField();
-		textField_14.setColumns(10);
-		textField_14.setBounds(191, 121, 371, 20);
-		panel_1_1.add(textField_14);
-
-		textField_15 = new JTextField();
-		textField_15.setColumns(10);
-		textField_15.setBounds(191, 183, 371, 20);
-		panel_1_1.add(textField_15);
 		return promotionPanel;
 	}
 
@@ -1158,8 +942,6 @@ public class ViewMain extends JFrame {
 		txttotal.setBounds(142, 134, 199, 19);
 		panel_2.add(txttotal);
 
-		
-		
 		txtemp = new JTextField();
 		txtemp.setColumns(10);
 		txtemp.setBounds(142, 188, 199, 19);
@@ -1247,7 +1029,7 @@ public class ViewMain extends JFrame {
 		panel_1.setLayout(null);
 
 		btnUpdateEmployee = new JButton("Update");
-		btnUpdateEmployee.setBounds(567, 168, 85, 21);
+		btnUpdateEmployee.setBounds(141, 168, 85, 21);
 		panel_1.add(btnUpdateEmployee);
 
 		JLabel lblNewLabel_2 = new JLabel("ID:");
@@ -1306,19 +1088,19 @@ public class ViewMain extends JFrame {
 		employeeCCCDField.setBounds(479, 78, 173, 19);
 		panel_1.add(employeeCCCDField);
 
-		JLabel lblNewLabel_8 = new JLabel("");
-		lblNewLabel_8.setIcon(new ImageIcon(avataDemo));
-		lblNewLabel_8.setBounds(10, 28, 68, 109);
-		panel_1.add(lblNewLabel_8);
+		JLabel lblEmployeeAvatar = new JLabel("");
+		lblEmployeeAvatar.setIcon(new ImageIcon(avataDemo));
+		lblEmployeeAvatar.setBounds(10, 28, 68, 109);
+		panel_1.add(lblEmployeeAvatar);
 
 		createEmployeeButton = new JButton("New employee");
-		createEmployeeButton.setBounds(446, 167, 99, 23);
+		createEmployeeButton.setBounds(553, 167, 99, 23);
 		panel_1.add(createEmployeeButton);
 		createEmployeeButton.setBackground(new Color(255, 255, 255));
 
-		btnNewButton_4 = new JButton("Change avatar");
-		btnNewButton_4.setBounds(10, 168, 99, 21);
-		panel_1.add(btnNewButton_4);
+		btnDeleteEmployee = new JButton("Delete");
+		btnDeleteEmployee.setBounds(10, 168, 99, 21);
+		panel_1.add(btnDeleteEmployee);
 
 		cboPositionEmployee = new JComboBox();
 		cboPositionEmployee.setModel(new DefaultComboBoxModel(new String[] { "Nhân viên", "Quản lý", "" }));
@@ -1332,7 +1114,9 @@ public class ViewMain extends JFrame {
 		employeePanel.add(employeeList);
 		employeeList.setLayout(new GridLayout(1, 0, 0, 0));
 		JScrollPane scrollPane = new JScrollPane();
-
+		
+		//String[] COLUMN_NAMES = {"ID","Name","Date of birth","Phone number","CCCD","Position"};
+		//EmployeetableModel = new DefaultTableModel(null, COLUMN_NAMES);
 		employeeTable = new JTable();
 		scrollPane.setViewportView(employeeTable);
 		employeeList.add(scrollPane);
@@ -1340,8 +1124,6 @@ public class ViewMain extends JFrame {
 		return employeePanel;
 	}
 
-	
-	
 	public JPanel customerPanelTab() {
 		JPanel customerPanel = new JPanel();
 		customerPanel.setLayout(new BoxLayout(customerPanel, BoxLayout.Y_AXIS));
@@ -1365,51 +1147,54 @@ public class ViewMain extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("Phone  number:");
 		lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
 
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
+		customerPhoneFind = new JTextField();
+		customerPhoneFind.setColumns(10);
 
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
+		customerNameFind = new JTextField();
+		customerNameFind.setColumns(10);
 
-		JButton btnNewButton = new JButton("Find");
-		btnNewButton.setBackground(new Color(255, 255, 255));
+		btnFindCustomer = new JButton("Find");
+		btnFindCustomer.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		btnFindCustomer.setBackground(new Color(255, 255, 255));
 
-		JButton btnNewButton_1 = new JButton("Reset");
-		btnNewButton_1.setBackground(new Color(255, 255, 255));
+		btnResetCustomer = new JButton("Reset");
+		btnResetCustomer.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		btnResetCustomer.setBackground(new Color(255, 255, 255));
 
-		JButton btnNewButton_2 = new JButton("Add");
-		btnNewButton_2.setBackground(new Color(255, 255, 255));
+		btnAddCustomer = new JButton("Add");
+		btnAddCustomer.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		btnAddCustomer.setBackground(new Color(255, 255, 255));
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(gl_panel
 				.createSequentialGroup().addContainerGap()
 				.addGroup(gl_panel.createParallelGroup(Alignment.LEADING).addComponent(lblNewLabel_1)
 						.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
 				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-								.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnNewButton_1,
-										GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING).addGroup(gl_panel.createSequentialGroup()
+						.addComponent(customerPhoneFind, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(btnResetCustomer, GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panel.createSequentialGroup()
-								.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnNewButton,
+								.addComponent(customerNameFind, GroupLayout.PREFERRED_SIZE, 236,
+										GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnFindCustomer,
 										GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE)))
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE).addGap(8)
-				.addContainerGap(329, Short.MAX_VALUE)));
+				.addPreferredGap(ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
+				.addComponent(btnAddCustomer, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
+				.addContainerGap()));
 		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup().addContainerGap()
 						.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING).addComponent(lblNewLabel)
 								.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-										.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnNewButton).addComponent(btnNewButton_2)))
+										.addComponent(customerNameFind, GroupLayout.PREFERRED_SIZE,
+												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(btnFindCustomer).addComponent(btnAddCustomer)))
 						.addGap(61)
 						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(lblNewLabel_1)
-								.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+								.addComponent(customerPhoneFind, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
 										GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnNewButton_1))
-						.addContainerGap(48, Short.MAX_VALUE)));
+								.addComponent(btnResetCustomer))
+						.addContainerGap(61, Short.MAX_VALUE)));
 		panel.setLayout(gl_panel);
 
 		JPanel panel_1 = new JPanel();
@@ -1417,9 +1202,10 @@ public class ViewMain extends JFrame {
 		findEmployee.add(panel_1);
 		panel_1.setLayout(null);
 
-		JButton btnNewButton_3 = new JButton("Update");
-		btnNewButton_3.setBounds(499, 115, 85, 26);
-		panel_1.add(btnNewButton_3);
+		btnUpdateCustomer = new JButton("Update");
+		btnUpdateCustomer.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		btnUpdateCustomer.setBounds(499, 115, 85, 26);
+		panel_1.add(btnUpdateCustomer);
 
 		JLabel lblNewLabel_2 = new JLabel("ID:");
 		lblNewLabel_2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 13));
@@ -1446,30 +1232,36 @@ public class ViewMain extends JFrame {
 		lblNewLabel_6.setBounds(310, 82, 56, 13);
 		panel_1.add(lblNewLabel_6);
 
-		textField_5 = new JTextField();
-		textField_5.setBounds(99, 118, 184, 19);
-		panel_1.add(textField_5);
-		textField_5.setColumns(10);
+		customerEmailField = new JTextField();
+		customerEmailField.setBounds(99, 118, 184, 19);
+		panel_1.add(customerEmailField);
+		customerEmailField.setColumns(10);
 
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(99, 69, 184, 19);
-		panel_1.add(textField_6);
+		customerNameField = new JTextField();
+		customerNameField.setColumns(10);
+		customerNameField.setBounds(99, 69, 184, 19);
+		panel_1.add(customerNameField);
 
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
-		textField_7.setBounds(99, 25, 184, 19);
-		panel_1.add(textField_7);
+		customerIDField = new JTextField();
+		customerIDField.setEditable(false);
+		customerIDField.setColumns(10);
+		customerIDField.setBounds(99, 25, 184, 19);
+		panel_1.add(customerIDField);
 
-		textField_8 = new JTextField();
-		textField_8.setColumns(10);
-		textField_8.setBounds(411, 28, 173, 19);
-		panel_1.add(textField_8);
+		customerPhoneField = new JTextField();
+		customerPhoneField.setColumns(10);
+		customerPhoneField.setBounds(411, 28, 173, 19);
+		panel_1.add(customerPhoneField);
 
-		textField_9 = new JTextField();
-		textField_9.setColumns(10);
-		textField_9.setBounds(411, 78, 173, 19);
-		panel_1.add(textField_9);
+		customerAddressField = new JTextField();
+		customerAddressField.setColumns(10);
+		customerAddressField.setBounds(411, 78, 173, 19);
+		panel_1.add(customerAddressField);
+
+		btnDeleteCustomer = new JButton("Delete");
+		btnDeleteCustomer.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		btnDeleteCustomer.setBounds(392, 115, 85, 26);
+		panel_1.add(btnDeleteCustomer);
 
 		JPanel employeeList = new JPanel();
 		employeeList.setBorder(

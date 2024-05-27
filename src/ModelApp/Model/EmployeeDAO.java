@@ -47,32 +47,37 @@ public class EmployeeDAO {
 	}
 	public static void insertEmployee1(String iDNhanVien, String tenNhanVien, String ngaySinh, String cCCD, String sDT, String gioiTinh, String anhDaiDien, String iDChucVu, String NgayBDLamViec, String TaiKhoan, String MatKhau) throws SQLException {
 		Connection con = DBConnect.getConnection();
+		String sqlCount = "SELECT COUNT(*) AS count FROM NhanVien";
 		String sql = "Insert Into NhanVien(IDNV, TenNV, NgaySinh, CCCD, SDT, GioiTinh, AnhDaiDien, IDChucVu, NgayBDLamViec, TaiKhoan, MatKhau) Values (?,?,?,?,?,?,?,?,?,?,?)";
 		
-		try(
+		try(	
+				PreparedStatement ptsmCount = con.prepareStatement(sqlCount);
+		        ResultSet rsCount = ptsmCount.executeQuery();
 				PreparedStatement ptsm = con.prepareStatement(sql);
 				
 				)
 		
 		{
-			ptsm.setString(1, iDNhanVien);
-			ptsm.setString(2, tenNhanVien);
-			ptsm.setString(3,  ngaySinh);
-			ptsm.setString(4, cCCD);
-			ptsm.setString(5, sDT);
-			ptsm.setString(6, gioiTinh);
-			ptsm.setString(7, anhDaiDien);
-			ptsm.setString(8, iDChucVu);
-			ptsm.setString(9,  NgayBDLamViec);
-			ptsm.setString(10, TaiKhoan);
-			ptsm.setString(11, MatKhau);
-			
+			if(rsCount.next())
+			{
+				int count = rsCount.getInt("count");
+	            iDNhanVien  = "NV00" + (count + 1);
+	            ptsm.setString(1, iDNhanVien);
+				ptsm.setString(2, tenNhanVien);
+				ptsm.setString(3,  ngaySinh);
+				ptsm.setString(4, cCCD);
+				ptsm.setString(5, sDT);
+				ptsm.setString(6, gioiTinh);
+				ptsm.setString(7, anhDaiDien);
+				ptsm.setString(8, iDChucVu);
+				ptsm.setString(9,  NgayBDLamViec);
+				ptsm.setString(10, TaiKhoan);
+				ptsm.setString(11, MatKhau);
+			}
 			// Thực hiện câu lệnh SQL để chèn dữ liệu
             int rowsAffected = ptsm.executeUpdate();
-
             // Xuất kết quả
             System.out.println("Số dòng được thêm vào: " + rowsAffected);
-			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -84,28 +89,22 @@ public class EmployeeDAO {
 	public static void updateEmployee(String iDNhanVien, String tenNhanVien, String ngaySinh, String cCCD, String sDT, String iDChucVu) throws SQLException
 	{
 		Connection con = DBConnect.getConnection();
-		String sql = "UPDATE NhanVien SET TenNV = ?, NgaySinh = ?, CCCD = ?, SDT = ?,  IDChucVu = ?  WHERE IDNV = ?";
-		
+		String sql = "UPDATE NhanVien SET TenNV = ?, NgaySinh = ?, CCCD = ?, SDT = ?,  IDChucVu = ?  WHERE IDNV = ?";		
 		try(
 				PreparedStatement ptsm = con.prepareStatement(sql);
-				
 				)
 		
 		{
-			
 			ptsm.setString(1, tenNhanVien);
 			ptsm.setString(2,  ngaySinh);
 			ptsm.setString(3, cCCD);
 			ptsm.setString(4, sDT);
 			ptsm.setString(5, iDChucVu);
 			ptsm.setString(6, iDNhanVien);
-			
 			// Thực hiện câu lệnh SQL để chèn dữ liệu
             int rowsAffected = ptsm.executeUpdate();
-
             // Xuất kết quả
             System.out.println("Số dòng được sửa vào: " + rowsAffected);
-			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -130,5 +129,84 @@ public class EmployeeDAO {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+	}
+	
+	public static List<Employee> findEmployee(String name) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		List<Employee> listEmployee = new ArrayList<Employee>();
+		String sql = "Select * from NhanVien where TenNV like ?";
+		try(
+				PreparedStatement ptsm = con.prepareStatement(sql);
+				)
+		{
+			ptsm.setString(1, "%"+name+"%");
+			ResultSet rs = ptsm.executeQuery();
+			while(rs.next())
+			{
+				Employee em = new Employee();
+				em.setIDNhanVien(rs.getString("IDNV"));
+				em.setTenNhanVien(rs.getString("TenNV"));
+				em.setNgaySinh(rs.getString("NgaySinh"));
+				em.setSDT(rs.getString("SDT"));
+				em.setCCCD(rs.getString("CCCD"));
+				em.setIDChucVu(rs.getString("IDChucVu"));
+				listEmployee.add(em);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return listEmployee;
+	}
+	
+	public static List<Employee> findEmployeeByPhoneNum(String phoneNum) throws SQLException
+	{
+		Connection con = DBConnect.getConnection();
+		List<Employee> listEmployee = new ArrayList<Employee>();
+		String sql = "Select * from NhanVien where SDT like ?";
+		try(
+				PreparedStatement ptsm = con.prepareStatement(sql);
+				)
+		{
+			ptsm.setString(1, "%"+phoneNum+"%");
+			ResultSet rs = ptsm.executeQuery();
+			while(rs.next())
+			{
+				Employee em = new Employee();
+				em.setIDNhanVien(rs.getString("IDNV"));
+				em.setTenNhanVien(rs.getString("TenNV"));
+				em.setNgaySinh(rs.getString("NgaySinh"));
+				em.setSDT(rs.getString("SDT"));
+				em.setCCCD(rs.getString("CCCD"));
+				em.setIDChucVu(rs.getString("IDChucVu"));
+				listEmployee.add(em);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return listEmployee;
+	}
+	
+	public static void deleteEmployee(String id) throws SQLException
+	{
+		
+		Connection con = DBConnect.getConnection();
+		String sql ="DELETE FROM NhanVien WHERE IDNV = ?";
+		try(
+				PreparedStatement ptsm = con.prepareStatement(sql)
+				) 
+		{
+			ptsm.setString(1, id);
+			int rowsAffected = ptsm.executeUpdate();
+			System.out.println("Số dòng bị xóa: " + rowsAffected);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 }

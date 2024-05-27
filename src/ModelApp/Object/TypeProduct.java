@@ -3,6 +3,10 @@ import java.io.Serializable;
 
 public class TypeProduct implements Serializable{
 
+	@Override
+	public String toString() {
+		return tenLoai;
+	}
 	/**
 	 * 
 	 */

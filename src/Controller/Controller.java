@@ -3,7 +3,6 @@ package Controller;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Insets;
@@ -23,7 +22,6 @@ import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,20 +32,21 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.toedter.calendar.JDateChooser;
 
 import ModelApp.Model.BillDAO;
 import ModelApp.Model.CustomerDAO;
 import ModelApp.Model.EmployeeDAO;
-import ModelApp.Model.InventoryDAO;
 import ModelApp.Model.OrderDAO;
 import ModelApp.Model.ProductDAO;
 import ModelApp.Model.PromotionDAO;
@@ -57,7 +56,6 @@ import ModelApp.Object.Bill;
 import ModelApp.Object.Customer;
 import ModelApp.Object.DateConvert;
 import ModelApp.Object.Employee;
-import ModelApp.Object.Inventory;
 import ModelApp.Object.Order;
 import ModelApp.Object.Product;
 import ModelApp.Object.Promotion;
@@ -66,7 +64,6 @@ import ModelApp.Object.TypeProduct;
 import TableModel.BillTableModel;
 import TableModel.CustomerTableModel;
 import TableModel.EmployeeTableModel;
-import TableModel.InventoryTableModel;
 import TableModel.ProductTableModel;
 import TableModel.PromotionTableModel;
 import TableModel.TypeInventoryTableModel;
@@ -74,6 +71,7 @@ import TableModel.TypeProductTableModel;
 import View.BillToPay;
 import View.ChangePassword;
 import View.ChoosePromotion;
+import View.CreateCustomer;
 import View.CreateEmployee;
 import View.CreateOrder;
 import View.EditOrder;
@@ -91,7 +89,6 @@ public class Controller {
 	EmployeeDAO emoloyeeDAO = new EmployeeDAO();
 	ProductDAO productDAO = new ProductDAO();
 	TypeProductDAO typeProductDAO = new TypeProductDAO();
-	InventoryDAO inventoryDAO = new InventoryDAO();
 	PromotionDAO promotionDAO = new PromotionDAO();
 	TypeInventoryDAO typeInventoryDAO = new TypeInventoryDAO();
 	OrderDAO orderDAO = new OrderDAO();
@@ -116,7 +113,6 @@ public class Controller {
 		setDataTableProduct();
 		setDataTableCustomer();
 		setDataTableEmployee();
-		setDataTableInventory();
 		setDataTablePromotion();
 		setDataTableTypeInventory();
 		setDataTableTypeProduct();
@@ -125,6 +121,13 @@ public class Controller {
 		loadPanelOrder();
 		initActionButtonPay();
 		initActionEmployee();
+		ProductPanel();
+		clickTablePromotion();
+		addPromotion();
+		updatePromotion();
+		deletePromotion();
+		searchPromotion();
+		initActionCustomer();
 	}
 
 	public void clickBillTable() {
@@ -147,6 +150,236 @@ public class Controller {
 
 			}
 		});
+	}
+
+	public void ProductPanel() {
+		view.searchTypebtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (view.searchTypeProductTextField.getText().trim().equals("")) {
+					JOptionPane.showMessageDialog(view.Type_panel, "vui lòng nhập trường tìm kiếm!!!");
+				} else {
+					List<TypeProduct> list = typeProductDAO.searchTypeList(view.searchTypeProductTextField.getText());
+					TypeProductTableModel typeProductTableModel = new TypeProductTableModel(list);
+					typeProductTableModel.fireTableDataChanged();
+					view.setDataTableTypeProduct(typeProductTableModel);
+				}
+			}
+		});
+		view.resetTypeProductbtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					setDataTableTypeProduct();
+					view.searchTypeProductTextField.setText("");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		view.searchProductbtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (view.searchProductTextField.getText().trim().equals("")) {
+					JOptionPane.showMessageDialog(view.Product_panel, "vui lòng nhập trường tìm kiếm!!!");
+				} else {
+					List<Product> list = productDAO.searchProductList(view.searchProductTextField.getText());
+					ProductTableModel ProductTableModel = new ProductTableModel(list);
+					ProductTableModel.fireTableDataChanged();
+					view.setDataTableProduct(ProductTableModel);
+				}
+			}
+		});
+		view.resetProductbtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					setDataTableProduct();
+					view.searchProductTextField.setText("");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		view.typeProductTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int r = view.typeProductTable.getSelectedRow();
+				view.IDTypeProductTextField.setText(view.typeProductTable.getValueAt(r, 0).toString());
+				view.nameTypeProductTextField.setText(view.typeProductTable.getValueAt(r, 1).toString());
+			}
+		});
+
+		view.productTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int r = view.productTable.getSelectedRow();
+				view.IDProductTextField.setText(view.productTable.getValueAt(r, 0).toString());
+				view.nameProductTextField.setText(view.productTable.getValueAt(r, 1).toString());
+				selectProductTypeByUnit(view.UnitProductComboBox, view.productTable.getValueAt(r, 2).toString().trim());
+				view.priceProductTextField.setText(view.productTable.getValueAt(r, 3).toString());
+				selectProductTypeById(view.typeProductComboBox, view.productTable.getValueAt(r, 5).toString().trim());
+				view.GiaUpSizeTextField.setText(view.productTable.getValueAt(r, 6).toString());
+			}
+		});
+		view.updateTypeChoosebtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (view.IDTypeProductTextField.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(view.Type_panel, "vui lòng chọn loại sản phẩm!!!");
+				else {
+					try {
+						typeProductDAO.updateType(view.IDTypeProductTextField.getText().toString(),
+								view.nameTypeProductTextField.getText().toString());
+						setDataTableTypeProduct();
+						JOptionPane.showMessageDialog(view.Type_panel, "cập nhật thành công!!!");
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+
+				}
+			}
+		});
+		view.deleteTypeProductchoosebtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				if (view.IDProductTextField.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(view.Type_panel, "vui lòng chọn loại sản phẩm!!!");
+				else {
+
+					try {
+						typeProductDAO.deleteType(view.IDTypeProductTextField.getText().toString());
+						setDataTableTypeProduct();
+						JOptionPane.showMessageDialog(view.Type_panel, "xóa thành công!!!");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+			}
+		});
+		view.updateProductChoosebtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (view.IDProductTextField.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(view.Type_panel, "vui lòng chọn loại sản phẩm!!!");
+				else {
+					try {
+						productDAO.updateProduct(view.IDProductTextField.getText().toString(),
+								view.nameProductTextField.getText().toString(),
+								view.UnitProductComboBox.getSelectedItem().toString(),
+								Integer.valueOf(view.priceProductTextField.getText()),
+								selectProductTypeByName(view.typeProductComboBox,
+										view.typeProductComboBox.getSelectedItem().toString()),
+								Integer.valueOf(view.GiaUpSizeTextField.getText()));
+						setDataTableProduct();
+						JOptionPane.showMessageDialog(view.Type_panel, "cập nhật thành công!!!");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+			}
+		});
+		view.deleteProductChoosebtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				if (view.IDProductTextField.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(view.Product_panel, "vui lòng chọn loại sản phẩm!!!");
+				else {
+
+					try {
+						productDAO.deleteProduct(view.IDProductTextField.getText().toString());
+						setDataTableProduct();
+						JOptionPane.showMessageDialog(view.Product_panel, "xóa thành công!!!");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+			}
+		});
+		addTypeProduct();
+		addProduct();
+	}
+	public void addTypeProduct() {
+		view.createTypeProductbtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+	        	try {
+
+		            String IDLoaiSP = "LSP00"+(typeProductDAO.getData().size()+1);
+		            String TenLoaiSP = view.nameTypeProductTextField.getText().trim();
+		            TypeProductDAO.insertTypetProduct(IDLoaiSP, TenLoaiSP);
+		            JOptionPane.showMessageDialog(view,"Upadate sucess!");
+		            setDataTableTypeProduct();
+		            
+	        	}catch(Exception e1) {
+	        		e1.printStackTrace();
+	        	}
+			}
+		});
+	}
+	public void addProduct() {
+		view.createProductbtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String IDSanPham = "SP0"+(productDAO.getData().size()+1);
+		            String TenSP = view.nameProductTextField.getText().trim();
+		            String DonViTinh =view.UnitProductComboBox.getSelectedItem().toString();
+		            int GiaBan = Integer.valueOf(view.priceProductTextField.getText());
+		            String IDLoaiSP=selectProductTypeByName(view.typeProductComboBox, view.typeProductComboBox.getSelectedItem().toString());
+					int GiaUpSize = Integer.valueOf(view.GiaUpSizeTextField.getText());
+		            ProductDAO.insertProduct(IDSanPham, TenSP, DonViTinh, GiaBan, IDLoaiSP,GiaUpSize);
+					JOptionPane.showMessageDialog(view,"Save sucess!");
+					setDataTableProduct();
+				}catch(Exception e2) {
+					e2.printStackTrace();
+				}
+
+			}
+		});
+	}
+
+	public String selectProductTypeByName(JComboBox<TypeProduct> comboBox, String name) {
+		for (int i = 0; i < comboBox.getItemCount(); i++) {
+			TypeProduct type = comboBox.getItemAt(i);
+			if (type.getTenLoai().trim().equals(name)) {
+				return type.getIDLoaiSP();
+			}
+		}
+		return null;
+	}
+
+	public void selectProductTypeById(JComboBox<TypeProduct> comboBox, String id) {
+		for (int i = 0; i < comboBox.getItemCount(); i++) {
+			TypeProduct type = comboBox.getItemAt(i);
+			if (type.getIDLoaiSP().trim().equals(id)) {
+				comboBox.setSelectedItem(type);
+				break;
+			}
+		}
+	}
+
+	public void selectProductTypeByUnit(JComboBox<String> comboBox, String id) {
+		for (int i = 0; i < comboBox.getItemCount(); i++) {
+			if (comboBox.getItemAt(i).equals(id)) {
+				comboBox.setSelectedItem(comboBox.getItemAt(i));
+				break;
+			}
+		}
 	}
 
 	public void updateTotalToBill(BillToPay BP, Promotion p, int castTotal) {
@@ -188,7 +421,8 @@ public class Controller {
 											public void windowClosed(WindowEvent e) {
 
 												if (cp.State == true) {
-													if (cp.getPromotionChoosed().getIDKhuyenMai().trim().equals("KMVIP"))
+													if (cp.getPromotionChoosed().getIDKhuyenMai().trim()
+															.equals("KMVIP"))
 														if (BP.customer.getIDKH().equals("KH0VL"))
 															JOptionPane.showMessageDialog(view.componentOfBillPanel,
 																	"vui lòng nhập số điện thoại khách hàng!!!");
@@ -244,23 +478,20 @@ public class Controller {
 							}
 						});
 						BP.registerCustomer.addActionListener(new ActionListener() {
-							
+
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								RegisterVIPCustomers RG = new RegisterVIPCustomers();
 								RG.setVisible(true);
 								RG.registerbtn.addActionListener(new ActionListener() {
-									
+
 									@Override
 									public void actionPerformed(ActionEvent e) {
-										if(RG.check())
-										{
+										if (RG.check()) {
 											try {
-												if(CustomerDAO.checkIDKH(RG.RanmdomIDKH()))
-												{
+												if (CustomerDAO.checkIDKH(RG.RanmdomIDKH())) {
 													JOptionPane.showMessageDialog(RG, "Khách hàng đã tồn tại!!!");
-												}
-												else {
+												} else {
 													CustomerDAO.insertCustomer(RG.getCustomer());
 													JOptionPane.showMessageDialog(RG, "Thêm khách hàng thành công!!!");
 													RG.dispose();
@@ -269,14 +500,14 @@ public class Controller {
 												// TODO Auto-generated catch block
 												e1.printStackTrace();
 											}
-										}else {
+										} else {
 											JOptionPane.showMessageDialog(RG, "vui lòng nhập đủ các trường!!!");
 										}
-										
+
 									}
 								});
 								RG.cancelbtn.addActionListener(new ActionListener() {
-									
+
 									@Override
 									public void actionPerformed(ActionEvent e) {
 										// TODO Auto-generated method stub
@@ -365,17 +596,12 @@ public class Controller {
 
 	public void setDataTableTypeProduct() throws SQLException {
 		List<TypeProduct> listTypeProduct = typeProductDAO.getData();
+		view.setComboBoxTypeProduct(listTypeProduct);
 		TypeProductTableModel typeProductTableModel = new TypeProductTableModel(listTypeProduct);
 		typeProductTableModel.fireTableDataChanged();
 		view.setDataTableTypeProduct(typeProductTableModel);
 	}
 
-	public void setDataTableInventory() throws SQLException {
-		List<Inventory> listInventory = inventoryDAO.getData();
-		InventoryTableModel inventoryTableModel = new InventoryTableModel(listInventory);
-		inventoryTableModel.fireTableDataChanged();
-		view.setDataTableInventory(inventoryTableModel);
-	}
 
 	public void setDataTableTypeInventory() throws SQLException {
 		List<TypeInventory> listTypeInventory = typeInventoryDAO.getData();
@@ -584,63 +810,63 @@ public class Controller {
 				dataChooser.getDate().getYear() + 1900);
 	}
 
-	public void initActionEmployee() {
+	public void initActionEmployee()
+	{
 		view.createEmployeeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CreateEmployee ce = new CreateEmployee(null);
 				ce.setVisible(true);
 				ce.btnCancelEmployee.addActionListener(new ActionListener() {
-
+					
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						int result = JOptionPane.showConfirmDialog(ce.btnCancelEmployee, "Do you want to exit?",
-								"Confirmation", JOptionPane.OK_CANCEL_OPTION);
+						int result = JOptionPane.showConfirmDialog(ce.btnCancelEmployee, "Do you want to exit?", "Confirmation", JOptionPane.OK_CANCEL_OPTION);
 						if (result == JOptionPane.OK_OPTION) {
 							ce.State = false;
 							ce.dispose();
 						}
-
+						
 					}
 				});
-
-				// nút thêm nhân viên
+				
+				//nút thêm nhân viên
 				ce.btnSaveEmployee.addActionListener(new ActionListener() {
-
+					
 					@SuppressWarnings("deprecation")
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						if (checkInfo(ce) == false) {
+						if(checkInfo(ce) == false)
+						{
 							JOptionPane.showMessageDialog(ce.addEmployee, "Please enter complete information!");
-						} else {
-							// Employee em = new Employee(ce.IDField.getText(), ce.nameField.getText(),
-							// ce.dateChooser.getDateFormatString(), ce.CCCDField.getText(),
-							// ce.phoneField.getText(), ce.bg.getSelection().toString(),
-							// ce.lblAvatar.getText(), ce.cboPosition.getSelectedItem().toString(),
-							// ce.dateChooser1.getDateFormatString(), ce.employeeUsernameField.getText(),
-							// ce.employeePasswordField.getSelectedText());
-
+						}
+						else
+						{												
 							String selectedDate = (String) (ce.dateChooser.getDate().toString());
 							DateConvert dc = dateConvert(ce.dateChooser);
 							String selectedDate1 = (String) (ce.dateChooser1.getDate().toString());
 							DateConvert dc1 = dateConvert(ce.dateChooser1);
-							String selectedOption = "";
-							if (ce.rdoMale.isSelected()) {
-								selectedOption = ce.rdoMale.getText();
-							} else {
-								selectedOption = ce.rdoFemale.getText();
-							}
-							String position = "";
-							if (ce.cboPosition.getSelectedItem() == "Nhân viên") {
-								position = "CV002";
-							} else {
-								position = "CV001";
-							}
+						    String selectedOption = "";
+						    if(ce.rdoMale.isSelected())
+						    {
+						    	selectedOption = ce.rdoMale.getText();
+						    }
+						    else
+						    {
+						    	selectedOption = ce.rdoFemale.getText();
+						    }
+						    String position = "";
+						    if(ce.cboPosition.getSelectedItem() == "Nhân viên")
+						    {
+						    	position = "CV002";
+						    }
+						    else
+						    {
+						    	position = "CV001";
+						    }
 							try {
-								EmployeeDAO.insertEmployee1(ce.IDField.getText(), ce.nameField.getText(), dc.toString(),
-										ce.CCCDField.getText(), ce.phoneField.getText(), selectedOption.toString(),
-										destination.toString(), position.toString(), dc1.toString(),
-										ce.employeeUsernameField.getText(), ce.employeePasswordField.getText());
-								emoloyeeDAO.getData();
+								EmployeeDAO.insertEmployee1(ce.IDField.getText(), ce.nameField.getText(), dc.toString(), ce.CCCDField.getText(), ce.phoneField.getText(), 
+										selectedOption.toString(), destination.toString(), position.toString(), 
+										dc1.toString(), ce.employeeUsernameField.getText(), ce.employeePasswordField.getText());
 								JOptionPane.showMessageDialog(ce.addEmployee, "Save success!");
 								ce.dispose();
 							} catch (SQLException e1) {
@@ -655,99 +881,156 @@ public class Controller {
 						}
 					}
 				});
-				// nút load hình đại diện
+				//nút load hình đại diện
 				ce.btnNewButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Create a file chooser
-						JFileChooser fc = new JFileChooser();
-						int result = fc.showOpenDialog(null);
+				        JFileChooser fc = new JFileChooser();
+				        int result = fc.showOpenDialog(null);
 
-						// Make sure that a file was chosen, else exit
-						if (result != JFileChooser.APPROVE_OPTION) {
-							System.exit(0);
-						}
+				        // Make sure that a file was chosen, else exit
+				        if (result != JFileChooser.APPROVE_OPTION) {
+				            System.exit(0);
+				        }
 
-						// Get file path
-						String path = fc.getSelectedFile().getAbsolutePath();
+				        // Get file path
+				        String path = fc.getSelectedFile().getAbsolutePath();
 
-						String existingFolderPath = "src/img";
-						File folder = new File(existingFolderPath);
-						if (!folder.exists()) {
-							boolean success = folder.mkdir();
-							if (!success) {
-								System.err.println("Failed to create directory: images");
-								System.exit(1);
-							}
-						}
+				        String existingFolderPath = "src/img";
+				        File folder = new File(existingFolderPath);
+				        if (!folder.exists()) {
+				            boolean success = folder.mkdir();
+				            if (!success) {
+				                System.err.println("Failed to create directory: images");
+				                System.exit(1);
+				            }
+				        }
 
-						// Get the destination path for the new image (image.jpg will be the new name)
-						destination = folder.getAbsolutePath() + File.separator + "image.jpg";
+				        // Get the destination path for the new image (image.jpg will be the new name)
+				        destination = folder.getAbsolutePath() + File.separator + "image.jpg";
 
-						try {
-							// Copy file from source to destination
-							FileChannel source = new FileInputStream(path).getChannel();
-							FileChannel dest = new FileOutputStream(destination).getChannel();
-							dest.transferFrom(source, 0, source.size());
+				        try {
+				            // Copy file from source to destination
+				            FileChannel source = new FileInputStream(path).getChannel();
+				            FileChannel dest = new FileOutputStream(destination).getChannel();
+				            dest.transferFrom(source, 0, source.size());
 
-							// Close the channels
-							source.close();
-							dest.close();
-							System.out.println("File copied successfully.");
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-						Image img = new ImageIcon(destination).getImage().getScaledInstance(215, 309,
-								Image.SCALE_SMOOTH);
-						ce.lblAvatar.setIcon(new ImageIcon(img));
-					}
-				});
-
-				view.btnReset.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						view.employeeNameFind.setText("");
-						view.employeePhoneFind.setText("");
-					}
-				});
-
-				view.btnFind.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						String tenNhanVien = view.employeeNameField.getText();
-						String sdt = view.employeePhoneField.getText();
-
-						System.out.println(tenNhanVien + sdt);
-
+				            // Close the channels
+				            source.close();
+				            dest.close();
+				            System.out.println("File copied successfully.");
+				        } catch (IOException e1) {
+				            e1.printStackTrace();
+				        }
+				        Image img = new ImageIcon(destination).getImage().getScaledInstance(215, 309,Image.SCALE_SMOOTH);
+				        ce.lblAvatar.setIcon(new ImageIcon(img));
 					}
 				});
 			}
 		});
-
-		view.btnUpdateEmployee.addActionListener(new ActionListener() {
-
-			@Override
+		
+		view.btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DateConvert dc = dateConvert(view.employeeDateField);
-				String position = "";
-				if (view.cboPositionEmployee.getSelectedItem() == "Nhân viên") {
-					position = "CV002";
-				} else {
-					position = "CV001";
-				}
+				view.employeeNameFind.setText(" ");
+				view.employeePhoneFind.setText(" ");
 				try {
-					EmployeeDAO.updateEmployee(view.employeeIDField.getText(), view.employeeNameField.getText(),
-							dc.toString(), view.employeeCCCDField.getText(), view.employeePhoneField.getText(),
-							position.toString());
-					emoloyeeDAO.getData();
-					JOptionPane.showMessageDialog(view.employeePanelTab(), "Update success!");
+					setDataTableEmployee();
 				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				view.employeeNameFind.setEnabled(true);
+				view.employeePhoneFind.setEnabled(true);
 			}
 		});
+	
+		view.employeeNameFind.getDocument().addDocumentListener(new DocumentListener() {
+            private void updatePhoneTextField() {
+                if (view.employeeNameFind.getText().isEmpty()) {
+                    view.employeePhoneFind.setEnabled(true); // Enable phoneTextField if nameTextField is empty
+                } else {
+                	view.employeePhoneFind.setEnabled(false);// Disable phoneTextField if nameTextField has text
+                	view.btnFind.addActionListener(new ActionListener() {
+            			
+            			@Override
+            			public void actionPerformed(ActionEvent e) {
+            				String name = view.employeeNameFind.getText();
+            	            List<Employee> employees = null;
+            	            try {
+            					employees = EmployeeDAO.findEmployee(name);
+            					EmployeeTableModel model = new EmployeeTableModel(employees);
+            					view.employeeTable.setModel(model);
+            				} catch (Exception e2) {
+            					e2.printStackTrace();
+            				}
+            				
+            			}
+            		});
+                }
+            }
 
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				updatePhoneTextField();
+				
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				updatePhoneTextField();
+				
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				updatePhoneTextField();
+				
+			}
+        });
+    
+		view.employeePhoneFind.getDocument().addDocumentListener(new DocumentListener() {
+            private void updateNameTextField() {
+                if (view.employeePhoneFind.getText().isEmpty()) {
+                    view.employeeNameFind.setEnabled(true);
+                } else {
+                	view.employeeNameFind.setEnabled(false); 
+                	view.btnFind.addActionListener(new ActionListener() {           			
+            			@Override
+            			public void actionPerformed(ActionEvent e) {
+            				String phoneNum = view.employeePhoneFind.getText();
+            	            List<Employee> employees = null;
+            	            try {
+            					employees = EmployeeDAO.findEmployeeByPhoneNum(phoneNum);
+            					EmployeeTableModel model = new EmployeeTableModel(employees);
+            					view.employeeTable.setModel(model);
+            				} catch (Exception e2) {
+            					e2.printStackTrace();
+            				}
+            				
+            			}
+            		});
+                }
+            }
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				updateNameTextField();
+				
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				updateNameTextField();
+				
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				updateNameTextField();
+				
+			}
+        });
+		
 		view.employeeTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -757,49 +1040,83 @@ public class Controller {
 				try {
 					date2 = new SimpleDateFormat("yyyy-MM-dd").parse(d);
 					view.employeeDateField.setDate(date2);
-					if (r < 0) {
+					if(r<0)
+					{
 						return;
 					}
 					view.employeeIDField.setText(view.employeeTable.getValueAt(r, 0).toString());
 					view.employeeNameField.setText(view.employeeTable.getValueAt(r, 1).toString());
 					view.employeeDateField.setDate(date2);
-					view.employeePhoneField.setText(view.employeeTable.getValueAt(r, 3).toString());
-					view.employeeCCCDField.setText(view.employeeTable.getValueAt(r, 4).toString());
-					if (view.employeeTable.getValueAt(r, 5).toString() == "CV001") {
+				    view.employeePhoneField.setText(view.employeeTable.getValueAt(r, 3).toString());
+					view.employeeCCCDField.setText(view.employeeTable.getValueAt(r, 4).toString());	
+					String id = view.employeeIDField.getText();
+					if(view.employeeTable.getValueAt(r, 5).toString() == "CV001")
+					{
 						view.cboPositionEmployee.getModel().setSelectedItem("Quản lý");
-					} else if (view.employeeTable.getValueAt(r, 5).toString() == "CV002") {
+					}
+					else if (view.employeeTable.getValueAt(r, 5).toString() == "CV002")
+					{
 						view.cboPositionEmployee.getModel().setSelectedItem("Nhân viên");
 					}
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
+				
+				
 			}
 		});
-
+		
 		view.btnChangePassword.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ChangePassword cp = new ChangePassword();
 				cp.setVisible(true);
 				cp.btnSave.addActionListener(new ActionListener() {
-
+					
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						if (checkPassword(cp) == false) {
+						if(checkPassword(cp) == false)
+						{
 							JOptionPane.showMessageDialog(cp.panel, "Please enter complete information!");
-						} else {
+						}
+						else
+						{
 							try {
 								EmployeeDAO.changePassword("abc", cp.XacNhanMKField.getText());
 								emoloyeeDAO.getData();
 								JOptionPane.showMessageDialog(view.employeePanelTab(), "Update success!");
-							} catch (Exception e1) {
+							}catch (Exception e1) {
 								// TODO: handle exception
 								e1.printStackTrace();
 							}
 						}
 					}
 				});
+			}
+		});
+		
+		view.btnDeleteEmployee.addActionListener(new ActionListener() {					
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String id = view.employeeIDField.getText().trim();
+		        if (id == null || id.isEmpty()) {
+		            JOptionPane.showMessageDialog(view.employeePanelTab(), "No employee selected.", "Error", JOptionPane.ERROR_MESSAGE);
+		            return;
+		        }
+
+		        int response = JOptionPane.showConfirmDialog(view.employeePanelTab(), "Delete this employee?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		        if (response == JOptionPane.NO_OPTION) {
+		            return;
+		        }
+
+		        try {
+		            EmployeeDAO.deleteEmployee(id);				            				            
+		            setDataTableEmployee();
+		            JOptionPane.showMessageDialog(view.employeePanelTab(), "Employee deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+		        } catch (SQLException e1) {
+		            e1.printStackTrace();
+		            JOptionPane.showMessageDialog(view.employeePanelTab(), "Error deleting employee.", "Error", JOptionPane.ERROR_MESSAGE);
+		        }
 			}
 		});
 	}
@@ -919,4 +1236,351 @@ public class Controller {
 			view.productsTabed.addTab(i.getTenLoai(), null, scrollPane, null);
 		}
 	}
+
+	public void clickTablePromotion() {
+		view.promotionTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int r = view.promotionTable.getSelectedRow();
+				if (r < 0) {
+					return;
+				}
+				view.txtid.setText(view.promotionTable.getValueAt(r, 0).toString());
+				view.txtnd.setText(view.promotionTable.getValueAt(r, 1).toString());
+				view.txtgiamgia.setText(view.promotionTable.getValueAt(r, 2).toString());
+				view.txtngaybd.setText(view.promotionTable.getValueAt(r, 3).toString());
+				view.txtngaykt.setText(view.promotionTable.getValueAt(r, 4).toString());
+			}
+		});
+	}
+
+	public void addPromotion() {
+		view.btnadd.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String IDKhuyenMai = view.txtid.getText().trim();
+					String noiDung = view.txtnd.getText().trim();
+					int giamGia = Integer.parseInt(view.txtgiamgia.getText().trim());
+					String ngayBD = view.txtngaybd.getText().trim();
+					String ngayKT = view.txtngaykt.getText().trim();
+
+					PromotionDAO.insertPromotion(IDKhuyenMai, noiDung, giamGia, ngayBD, ngayKT);
+					JOptionPane.showMessageDialog(view, "Save sucess!");
+					setDataTablePromotion();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public void updatePromotion() {
+		view.btnupdate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String IDKhuyenMai = view.txtid.getText().trim();
+					String noiDung = view.txtnd.getText().trim();
+					int giamGia = Integer.parseInt(view.txtgiamgia.getText().trim());
+					String ngayBD = view.txtngaybd.getText().trim();
+					String ngayKT = view.txtngaykt.getText().trim();
+
+					PromotionDAO.updatePromotion(IDKhuyenMai, noiDung, giamGia, ngayBD, ngayKT);
+					JOptionPane.showMessageDialog(view, "Upadate sucess!");
+					setDataTablePromotion();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
+	}
+
+	public void deletePromotion() {
+		view.btnxoa.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = view.promotionTable.getSelectedRow();
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(view, "Please select the promotion to delete.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				try {
+					String proDeleteId = view.promotionTable.getValueAt(selectedRow, 0).toString();
+					PromotionDAO.deletePromotion(proDeleteId);
+					JOptionPane.showMessageDialog(view, "Promotion has been successfully removed.");
+					setDataTablePromotion();
+				} catch (Exception e3) {
+					e3.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public void searchPromotion() {
+		view.btnTim.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String idkm = view.txttim.getText();
+				List<Promotion> promotion = null;
+				try {
+					promotion = PromotionDAO.findPromotion(idkm, idkm);
+					PromotionTableModel model = new PromotionTableModel(promotion);
+					view.promotionTable.setModel(model);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+	//CUSTOMER ACTION
+		public void initActionCustomer()
+		{
+			view.btnAddCustomer.addActionListener(new ActionListener() {
+				
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {	
+					CreateCustomer cr = new CreateCustomer();
+					cr.setVisible(true);	
+					
+					cr.btnCancel.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							int result = JOptionPane.showConfirmDialog(cr.btnCancel, "Do you want to exit?", "Confirmation", JOptionPane.OK_CANCEL_OPTION);
+							if (result == JOptionPane.OK_OPTION) {
+								cr.State = false;
+								cr.dispose();
+							}
+							
+						}
+					});
+					
+					cr.btnSave.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							if(checkInfoCustomer(cr) == false)
+							{
+								JOptionPane.showMessageDialog(cr.panel, "Please enter complete information!");
+							}
+							else
+							{
+								String id = cr.idField.getName();
+								String name = cr.nameField.getText();
+								String sex = "";
+								if(cr.rdoMale.isSelected())
+								{
+									sex = cr.rdoMale.getText();
+								}
+								else
+								{
+									sex = cr.rdoFemale.getText();
+								}
+								String phoneNum = cr.phoneNumField.getText();
+								String address = cr.addressField.getText();
+								String email = cr.emailField.getText();
+								try {
+									CustomerDAO.insertCustomer(id, name, sex, phoneNum, address, email);
+									JOptionPane.showMessageDialog(cr.panel, "Insert success!");
+									cr.dispose();
+									setDataTableCustomer();
+								} catch (Exception e2) {
+									e2.printStackTrace();
+								}
+							}
+						}
+					});
+				}
+			});
+			
+			view.btnResetCustomer.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					List<Customer> customers = null;
+					view.customerNameFind.setText(" ");
+					view.customerPhoneFind.setText(" ");
+					try {
+						customers = customerDAO.getData();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					CustomerTableModel model = new CustomerTableModel(customers);
+					view.customerTable.setModel(model);
+					view.customerNameFind.setEnabled(true);
+					view.customerPhoneFind.setEnabled(true);
+					
+				}
+			});
+			
+			view.customerNameFind.getDocument().addDocumentListener(new DocumentListener() {
+	            private void updatePhoneTextField() {
+	                if (view.customerNameFind.getText().isEmpty()) {
+	                    view.customerPhoneFind.setEnabled(true); // Enable phoneTextField if nameTextField is empty
+	                } else {
+	                	view.customerPhoneFind.setEnabled(false);// Disable phoneTextField if nameTextField has text
+	                	view.btnFindCustomer.addActionListener(new ActionListener() {
+	            			
+	            			@Override
+	            			public void actionPerformed(ActionEvent e) {
+	            				String name = view.customerNameFind.getText();
+	            	            List<Customer> customers = null;
+	            	            try {
+	            	            	customers = CustomerDAO.findCustomer(name);
+	            					CustomerTableModel model = new CustomerTableModel(customers);
+	            					view.customerTable.setModel(model);
+	            				} catch (Exception e2) {
+	            					e2.printStackTrace();
+	            				}
+	            				
+	            			}
+	            		});
+	                }
+	            }
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					updatePhoneTextField();
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					updatePhoneTextField();
+					
+				}
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					updatePhoneTextField();
+					
+				}
+	        });
+	    
+			view.customerPhoneFind.getDocument().addDocumentListener(new DocumentListener() {
+	            private void updateNameTextField() {
+	                if (view.customerPhoneFind.getText().isEmpty()) {
+	                    view.customerNameFind.setEnabled(true);
+	                } else {
+	                	view.customerNameFind.setEnabled(false); 
+	                	view.btnFindCustomer.addActionListener(new ActionListener() {
+	            			
+	            			@Override
+	            			public void actionPerformed(ActionEvent e) {
+	            				String phoneNum = view.customerPhoneFind.getText();
+	            	            List<Customer> customers = null;
+	            	            try {
+	            	            	customers = CustomerDAO.findCustomerByPhoneNum(phoneNum);
+	            					CustomerTableModel model = new CustomerTableModel(customers);
+	            					view.customerTable.setModel(model);
+	            				} catch (Exception e2) {
+	            					e2.printStackTrace();
+	            				}
+	            				
+	            			}
+	            		});
+	                }
+	            }
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					updateNameTextField();
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					updateNameTextField();
+					
+				}
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					updateNameTextField();
+					
+				}
+	        });
+		
+			view.customerTable.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					int r = view.customerTable.getSelectedRow();
+					if(r<0)
+					{
+						return;
+					}
+					view.customerIDField.setText(view.customerTable.getValueAt(r, 0).toString());
+					view.customerNameField.setText(view.customerTable.getValueAt(r, 1).toString());
+					view.customerEmailField.setText(view.customerTable.getValueAt(r, 2).toString());	
+					view.customerPhoneField.setText(view.customerTable.getValueAt(r, 3).toString());
+					view.customerAddressField.setText(view.customerTable.getValueAt(r, 4).toString());
+					
+					
+				}
+			});
+		
+			view.btnUpdateCustomer.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					    String ID = view.customerIDField.getText().trim(); 
+					    String name = view.customerNameField.getText().trim();
+					    String email = view.customerEmailField.getText().trim();
+					    String phoneNum = view.customerPhoneField.getText().trim();
+					    String address = view.customerAddressField.getText().trim();
+						try {
+							CustomerDAO.updateCustomer(ID,name,email,phoneNum,address);
+							JOptionPane.showMessageDialog(view.employeePanelTab(), "Update success!");
+							setDataTableCustomer();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+
+				}
+			});
+			
+			view.btnDeleteCustomer.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String id = view.customerIDField.getText().trim();
+			        if (id == null || id.isEmpty()) {
+			            JOptionPane.showMessageDialog(view.customerPanelTab(), "No customer selected.", "Error", JOptionPane.ERROR_MESSAGE);
+			            return;
+			        }
+
+			        int response = JOptionPane.showConfirmDialog(view.employeePanelTab(), "Delete this customer?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			        if (response == JOptionPane.NO_OPTION) {
+			            return;
+			        }
+
+			        try {
+			            CustomerDAO.deleteCustomer(id);				            				            
+			            setDataTableCustomer();
+			            JOptionPane.showMessageDialog(view.employeePanelTab(), "Customer deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+			        } catch (SQLException e1) {
+			            e1.printStackTrace();
+			            JOptionPane.showMessageDialog(view.employeePanelTab(), "Error deleting customer.", "Error", JOptionPane.ERROR_MESSAGE);
+			        }
+					
+				}
+			});
+		}
+		
+		public boolean checkInfoCustomer(CreateCustomer cr)
+		{
+			if(cr.idField.getText().trim() == null || cr.nameField.getText().trim() == null || cr.bg.isSelected(null) || cr.phoneNumField.getText().trim() == null || cr.emailField.getText().trim() == null || cr.addressField.getText().trim() == null)
+			{
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
 }

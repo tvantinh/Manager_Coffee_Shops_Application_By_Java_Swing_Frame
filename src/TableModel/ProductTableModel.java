@@ -47,9 +47,9 @@ public class ProductTableModel extends AbstractTableModel{
         case 2:
             return pd.getDonViTinh();
         case 3:
-            return pd.getMoTa();
-        case 4:
             return pd.getGiaBan();
+        case 4:
+            return pd.getMoTa();
         case 5:
             return pd.getIDLoaiSP();
         case 6:
