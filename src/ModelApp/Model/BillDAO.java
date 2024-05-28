@@ -1,5 +1,6 @@
 package ModelApp.Model;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,5 +27,22 @@ public class BillDAO {
 		}
 		return listBill;
 	}
+	private BigDecimal getSalesForDate(Connection conn) throws SQLException {
+        String dayQuery = "SELECT SUM(TongTien) AS total FROM HoaDon WHERE NgayLap >= 2024-05-27 ";
+
+        try (PreparedStatement stmt = conn.prepareStatement(dayQuery)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getBigDecimal("total");
+            }
+        }
+        return BigDecimal.ZERO;
+    }
+
+    public BigDecimal getSalesForDate() throws SQLException {
+        try (Connection conn = DBConnect.getConnection()) {
+            return getSalesForDate(conn);
+        }
+    }
 }
 

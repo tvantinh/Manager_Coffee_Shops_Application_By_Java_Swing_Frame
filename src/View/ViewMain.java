@@ -134,7 +134,7 @@ public class ViewMain extends JFrame {
 	public JTextField customerAddressField;
 	public JButton btnDeleteCustomer;
 	public JButton btnUpdateCustomer;
-
+	public JLabel daySales;
 	//
 	public JLabel searchTypebtn;
 	public JButton resetTypeProductbtn;
@@ -981,6 +981,16 @@ public class ViewMain extends JFrame {
 		txtnote.setColumns(10);
 		txtnote.setBounds(142, 342, 199, 19);
 		panel_2.add(txtnote);
+		
+		JLabel lblNewLabel_8 = new JLabel("thong ke theo ngay:");
+		lblNewLabel_8.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 17));
+		lblNewLabel_8.setBounds(42, 11, 201, 28);
+		statisticPanel.add(lblNewLabel_8);
+		
+		daySales = new JLabel("");
+		daySales.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		daySales.setBounds(253, 21, 222, 14);
+		statisticPanel.add(daySales);
 		return statisticPanel;
 	}
 

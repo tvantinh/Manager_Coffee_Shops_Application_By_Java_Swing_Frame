@@ -128,6 +128,15 @@ public class Controller {
 		deletePromotion();
 		searchPromotion();
 		initActionCustomer();
+		thongke();
+	}
+
+	public void thongke() throws SQLException
+	{
+		
+
+         view.daySales.setText(""+billDAO.getSalesForDate());
+         
 	}
 
 	public void clickBillTable() {
