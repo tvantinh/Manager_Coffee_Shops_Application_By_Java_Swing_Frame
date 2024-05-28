@@ -109,6 +109,7 @@ public class CreateCustomer extends JFrame {
 		
 		idField = new JTextField();
 		idField.setColumns(10);
+		idField.setEditable(false);
 		idField.setBounds(213, 74, 307, 19);
 		panel.add(idField);
 		

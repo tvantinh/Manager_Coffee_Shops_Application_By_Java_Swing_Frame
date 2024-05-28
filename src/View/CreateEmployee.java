@@ -218,6 +218,7 @@ public class CreateEmployee extends JFrame {
 		information.add(nameField);
 		
 		IDField = new JTextField();
+		IDField.setEditable(false);
 		IDField.setColumns(10);
 		IDField.setBounds(129, 58, 314, 19);
 		information.add(IDField);

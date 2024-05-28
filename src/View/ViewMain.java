@@ -242,13 +242,14 @@ public class ViewMain extends JFrame {
 		JPanel promotionPanelTab = promotionPanelTab();
 		tabbedPane.addTab("PROMOTION", null, promotionPanelTab, null);
 
-		JPanel employeePanelTab;
-		employeePanelTab = employeePanelTab();
-		if (em.getIDChucVu().equals("CV001"))
-			employeePanelTab.setEnabled(false);
-		else
-
+		JPanel employeePanelTab = employeePanelTab();
+		JPanel employeePanelTab1 = noneEmployeePanelTab();
+		if (em.getIDChucVu().trim().equals("CV001")) {
 			tabbedPane.addTab("EMPLOYEE", null, employeePanelTab, null);
+		} else {
+			tabbedPane.addTab("EMPLOYEE", null, employeePanelTab1, null);
+		}
+
 		JPanel customerPanelTab = customerPanelTab();
 		tabbedPane.addTab("CUSTOMER", null, customerPanelTab, null);
 		JPanel accountPanelTab = accountPanelTab();
@@ -283,7 +284,7 @@ public class ViewMain extends JFrame {
 		statictisLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				tabbedPane.setSelectedIndex(3);
+				tabbedPane.setSelectedIndex(2);
 			}
 		});
 		statictisLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -293,7 +294,7 @@ public class ViewMain extends JFrame {
 		promotionLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				tabbedPane.setSelectedIndex(4);
+				tabbedPane.setSelectedIndex(3);
 			}
 		});
 		promotionLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -303,7 +304,7 @@ public class ViewMain extends JFrame {
 		manageLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				tabbedPane.setSelectedIndex(5);
+				tabbedPane.setSelectedIndex(4);
 			}
 		});
 		manageLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -313,7 +314,7 @@ public class ViewMain extends JFrame {
 		customerLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				tabbedPane.setSelectedIndex(6);
+				tabbedPane.setSelectedIndex(5);
 			}
 		});
 		customerLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -323,7 +324,7 @@ public class ViewMain extends JFrame {
 		accountLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				tabbedPane.setSelectedIndex(7);
+				tabbedPane.setSelectedIndex(6);
 			}
 		});
 		accountLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -880,6 +881,15 @@ public class ViewMain extends JFrame {
 		return promotionPanel;
 	}
 
+	public JPanel noneEmployeePanelTab() {
+		JPanel Panel = new JPanel();
+		Panel.setLayout(new FlowLayout());
+		JLabel lblNewLabel_10 = new JLabel("Bạn không có quyền vào trang này!!!");
+		lblNewLabel_10.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		Panel.add(lblNewLabel_10);
+		return Panel;
+	}
+
 	public JPanel statisticPanelTab() {
 		JPanel statisticPanel = new JPanel();
 		statisticPanel.setLayout(null);
@@ -1114,9 +1124,10 @@ public class ViewMain extends JFrame {
 		employeePanel.add(employeeList);
 		employeeList.setLayout(new GridLayout(1, 0, 0, 0));
 		JScrollPane scrollPane = new JScrollPane();
-		
-		//String[] COLUMN_NAMES = {"ID","Name","Date of birth","Phone number","CCCD","Position"};
-		//EmployeetableModel = new DefaultTableModel(null, COLUMN_NAMES);
+
+		// String[] COLUMN_NAMES = {"ID","Name","Date of birth","Phone
+		// number","CCCD","Position"};
+		// EmployeetableModel = new DefaultTableModel(null, COLUMN_NAMES);
 		employeeTable = new JTable();
 		scrollPane.setViewportView(employeeTable);
 		employeeList.add(scrollPane);

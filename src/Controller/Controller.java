@@ -865,7 +865,7 @@ public class Controller {
 						    }
 							try {
 								EmployeeDAO.insertEmployee1(ce.IDField.getText(), ce.nameField.getText(), dc.toString(), ce.CCCDField.getText(), ce.phoneField.getText(), 
-										selectedOption.toString(), destination.toString(), position.toString(), 
+										selectedOption.toString(), destination, position.toString(), 
 										dc1.toString(), ce.employeeUsernameField.getText(), ce.employeePasswordField.getText());
 								JOptionPane.showMessageDialog(ce.addEmployee, "Save success!");
 								ce.dispose();
@@ -884,50 +884,52 @@ public class Controller {
 				//nút load hình đại diện
 				ce.btnNewButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// Create a file chooser
-				        JFileChooser fc = new JFileChooser();
-				        int result = fc.showOpenDialog(null);
+					    JFileChooser fc = new JFileChooser();
+					    int result = fc.showOpenDialog(null);
 
-				        // Make sure that a file was chosen, else exit
-				        if (result != JFileChooser.APPROVE_OPTION) {
-				            System.exit(0);
-				        }
+					    if (result != JFileChooser.APPROVE_OPTION) {
+					        JOptionPane.showMessageDialog(null, "Không có tệp nào được chọn.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+					        return;
+					    }
 
-				        // Get file path
-				        String path = fc.getSelectedFile().getAbsolutePath();
+					    // Lấy đường dẫn tệp
+					    File selectedFile = fc.getSelectedFile();
+					    String path = selectedFile.getAbsolutePath();
+					    String fileName = selectedFile.getName();  // Lấy tên tệp gốc
 
-				        String existingFolderPath = "src/img";
-				        File folder = new File(existingFolderPath);
-				        if (!folder.exists()) {
-				            boolean success = folder.mkdir();
-				            if (!success) {
-				                System.err.println("Failed to create directory: images");
-				                System.exit(1);
-				            }
-				        }
+					    String existingFolderPath = "src/img";
+					    File folder = new File(existingFolderPath);
+					    if (!folder.exists()) {
+					        boolean success = folder.mkdir();
+					        if (!success) {
+					            JOptionPane.showMessageDialog(null, "Không thể tạo thư mục: img", "Lỗi", JOptionPane.ERROR_MESSAGE);
+					            return;
+					        }
+					    }
 
-				        // Get the destination path for the new image (image.jpg will be the new name)
-				        destination = folder.getAbsolutePath() + File.separator + "image.jpg";
+					    // Lấy đường dẫn đích cho ảnh mới với tên tệp gốc
+					    String destination = folder.getAbsolutePath() + File.separator + fileName;
 
-				        try {
-				            // Copy file from source to destination
-				            FileChannel source = new FileInputStream(path).getChannel();
-				            FileChannel dest = new FileOutputStream(destination).getChannel();
-				            dest.transferFrom(source, 0, source.size());
-
-				            // Close the channels
-				            source.close();
-				            dest.close();
-				            System.out.println("File copied successfully.");
-				        } catch (IOException e1) {
-				            e1.printStackTrace();
-				        }
-				        Image img = new ImageIcon(destination).getImage().getScaledInstance(215, 309,Image.SCALE_SMOOTH);
-				        ce.lblAvatar.setIcon(new ImageIcon(img));
+					    try (
+					        // Sao chép tệp từ nguồn đến đích
+					        FileChannel source = new FileInputStream(path).getChannel();
+					        FileChannel dest = new FileOutputStream(destination).getChannel()
+					    ) {
+					        dest.transferFrom(source, 0, source.size());
+					        System.out.println("Sao chép tệp thành công.");
+					    } catch (IOException e1) {
+					        e1.printStackTrace();
+					        JOptionPane.showMessageDialog(null, "Lỗi khi sao chép tệp.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+					        return;
+					    }
+					    Image img = new ImageIcon(destination).getImage().getScaledInstance(215, 309, Image.SCALE_SMOOTH);
+					    ce.lblAvatar.setIcon(new ImageIcon(img));
 					}
 				});
 			}
 		});
+		
+	
 		
 		view.btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1067,6 +1069,36 @@ public class Controller {
 			}
 		});
 		
+		view.btnUpdateEmployee.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					DateConvert dc = dateConvert(view.employeeDateField);
+				    String position = "";
+				    if(view.cboPositionEmployee.getSelectedItem() == "Nhân viên")
+				    {
+				    	position = "CV002";
+				    }
+				    else
+				    {
+				    	position = "CV001";
+				    }
+				    String ID = view.employeeIDField.getText().trim(); 
+				    String name = view.employeeNameField.getText().trim();
+				    String ngaySinh = dc.toString().trim();
+				    String CCCD = view.employeeCCCDField.getText().trim();
+				    String phoneNum = view.employeePhoneField.getText().trim();
+					EmployeeDAO.updateEmployee(ID,name,ngaySinh,CCCD, phoneNum, position);
+					setDataTableEmployee();
+					JOptionPane.showMessageDialog(view.employeePanelTab(), "Update success!");
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}	
+			}
+		});
+		
 		view.btnChangePassword.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ChangePassword cp = new ChangePassword();
@@ -1075,21 +1107,25 @@ public class Controller {
 					
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						if(checkPassword(cp) == false)
-						{
-							JOptionPane.showMessageDialog(cp.panel, "Please enter complete information!");
-						}
-						else
-						{
-							try {
-								EmployeeDAO.changePassword("abc", cp.XacNhanMKField.getText());
-								emoloyeeDAO.getData();
-								JOptionPane.showMessageDialog(view.employeePanelTab(), "Update success!");
-							}catch (Exception e1) {
-								// TODO: handle exception
-								e1.printStackTrace();
-							}
-						}
+					    if (areFieldsEmpty(cp)) {
+					        JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ các trường.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+					        return;
+					    }
+
+					    if (!isPasswordMatching(cp)) {
+					        JOptionPane.showMessageDialog(null, "Mật khẩu mới và mật khẩu xác nhận không khớp.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+					        return;
+					    }
+
+
+					    try {
+					        EmployeeDAO.changePassword(employeeLogin.getTaiKhoan(), cp.XacNhanMKField.getText());
+					        emoloyeeDAO.getData();
+					        JOptionPane.showMessageDialog(view.employeePanelTab(), "Đổi mật khẩu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+					    } catch (Exception e1) {
+					        e1.printStackTrace();
+					        JOptionPane.showMessageDialog(null, "Có lỗi xảy ra trong quá trình đổi mật khẩu. Vui lòng thử lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+					    }
 					}
 				});
 			}
@@ -1099,20 +1135,12 @@ public class Controller {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String id = view.employeeIDField.getText().trim();
-		        if (id == null || id.isEmpty()) {
-		            JOptionPane.showMessageDialog(view.employeePanelTab(), "No employee selected.", "Error", JOptionPane.ERROR_MESSAGE);
-		            return;
-		        }
-
-		        int response = JOptionPane.showConfirmDialog(view.employeePanelTab(), "Delete this employee?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-		        if (response == JOptionPane.NO_OPTION) {
-		            return;
-		        }
-
+				System.out.println(id);
 		        try {
 		            EmployeeDAO.deleteEmployee(id);				            				            
 		            setDataTableEmployee();
 		            JOptionPane.showMessageDialog(view.employeePanelTab(), "Employee deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+		            
 		        } catch (SQLException e1) {
 		            e1.printStackTrace();
 		            JOptionPane.showMessageDialog(view.employeePanelTab(), "Error deleting employee.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1120,18 +1148,16 @@ public class Controller {
 			}
 		});
 	}
+	public boolean isPasswordMatching(ChangePassword cp) {
+	    return cp.MKCuField.getText().equals(cp.XacNhanMKField.getText());
+	}
 
-	public boolean checkPassword(ChangePassword cp) {
-		if (cp.MKHienTaiField.getText().isEmpty() || cp.MKCuField.getText().isEmpty()
-				|| cp.XacNhanMKField.getText().isEmpty()) {
-			return false;
-		} else {
-			return true;
-		}
+	public boolean areFieldsEmpty(ChangePassword cp) {
+	    return cp.MKCuField.getText().isEmpty() || cp.XacNhanMKField.getText().isEmpty();
 	}
 
 	public boolean checkInfo(CreateEmployee ce) {
-		if (ce.IDField.getText().trim().isEmpty() || ce.nameField.getText().trim().isEmpty()
+		if ( ce.nameField.getText().trim().isEmpty()
 				|| ce.dateChooser.getDate() == null || ce.CCCDField.getText().trim().isEmpty()
 				|| ce.phoneField.getText().trim().isEmpty() || ce.bg.isSelected(null)
 				|| ce.dateChooser1.getDate() == null) {
@@ -1575,7 +1601,7 @@ public class Controller {
 		
 		public boolean checkInfoCustomer(CreateCustomer cr)
 		{
-			if(cr.idField.getText().trim() == null || cr.nameField.getText().trim() == null || cr.bg.isSelected(null) || cr.phoneNumField.getText().trim() == null || cr.emailField.getText().trim() == null || cr.addressField.getText().trim() == null)
+			if(cr.nameField.getText().trim() == null || cr.bg.isSelected(null) || cr.phoneNumField.getText().trim() == null || cr.emailField.getText().trim() == null || cr.addressField.getText().trim() == null)
 			{
 				return false;
 			}

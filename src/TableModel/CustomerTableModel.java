@@ -12,7 +12,7 @@ public class CustomerTableModel extends AbstractTableModel{
 
 
 	private static final long serialVersionUID = 1L;
-	protected static String[] COLUMN_NAMES = {"Name","Sex"};
+	protected static String[] COLUMN_NAMES = {"ID","Name","Email","Phone Number", "Address"};
 	List<Customer> listCustomer = new ArrayList<>();
 	public List<Customer> getListCustomer()
 	{
@@ -40,9 +40,15 @@ public class CustomerTableModel extends AbstractTableModel{
 		switch(columnIndex)
 		{
 		case 0:
-			return Customer.getTenKH();
+			return Customer.getIDKH();
 		case 1:
-			return Customer.getGioiTinh();
+			return Customer.getTenKH();
+		case 2:
+			return Customer.getEmail();
+		case 3:
+			return Customer.getSDT();
+		case 4:
+			return Customer.getDiaChi();
 		default:
 			return null;
 		}

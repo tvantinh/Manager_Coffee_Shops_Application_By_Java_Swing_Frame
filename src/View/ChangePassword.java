@@ -18,7 +18,6 @@ public class ChangePassword extends JFrame {
 	public JButton btnCancel;
 	public JButton btnSave;
 	public JPanel panel;
-	public JPasswordField MKHienTaiField;
 	public JPasswordField MKCuField;
 	public JPasswordField XacNhanMKField;
 
@@ -52,11 +51,6 @@ public class ChangePassword extends JFrame {
 		lblNewLabel_1.setBounds(62, 175, 178, 20);
 		panel.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel_1_1 = new JLabel("Nhập mật khẩu hiện tại:");
-		lblNewLabel_1_1.setFont(new Font("Times New Roman", Font.ITALIC, 17));
-		lblNewLabel_1_1.setBounds(62, 116, 178, 20);
-		panel.add(lblNewLabel_1_1);
-		
 		JLabel lblNewLabel_1_2 = new JLabel("Nhập lại mật khẩu mới:");
 		lblNewLabel_1_2.setFont(new Font("Times New Roman", Font.ITALIC, 17));
 		lblNewLabel_1_2.setBounds(62, 234, 178, 20);
@@ -71,10 +65,6 @@ public class ChangePassword extends JFrame {
 		btnSave.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		btnSave.setBounds(383, 297, 85, 33);
 		panel.add(btnSave);
-		
-		MKHienTaiField = new JPasswordField();
-		MKHienTaiField.setBounds(250, 119, 328, 19);
-		panel.add(MKHienTaiField);
 		
 		MKCuField = new JPasswordField();
 		MKCuField.setBounds(250, 176, 328, 19);

@@ -4,6 +4,13 @@ import java.io.Serializable;
 
 public class Employee implements Serializable{
 	
+	@Override
+	public String toString() {
+		return "Employee [IDNhanVien=" + IDNhanVien + ", tenNhanVien=" + tenNhanVien + ", ngaySinh=" + ngaySinh
+				+ ", CCCD=" + CCCD + ", SDT=" + SDT + ", GioiTinh=" + GioiTinh + ", anhDaiDien=" + anhDaiDien
+				+ ", IDChucVu=" + IDChucVu + ", ngayBatDauLamViec=" + ngayBatDauLamViec + ", taiKhoan=" + taiKhoan
+				+ ", matKhau=" + matKhau + "]";
+	}
 	/**
 	 * 
 	 */
