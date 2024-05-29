@@ -50,7 +50,6 @@ import ModelApp.Model.EmployeeDAO;
 import ModelApp.Model.OrderDAO;
 import ModelApp.Model.ProductDAO;
 import ModelApp.Model.PromotionDAO;
-import ModelApp.Model.TypeInventoryDAO;
 import ModelApp.Model.TypeProductDAO;
 import ModelApp.Object.Bill;
 import ModelApp.Object.Customer;
@@ -59,14 +58,12 @@ import ModelApp.Object.Employee;
 import ModelApp.Object.Order;
 import ModelApp.Object.Product;
 import ModelApp.Object.Promotion;
-import ModelApp.Object.TypeInventory;
 import ModelApp.Object.TypeProduct;
 import TableModel.BillTableModel;
 import TableModel.CustomerTableModel;
 import TableModel.EmployeeTableModel;
 import TableModel.ProductTableModel;
 import TableModel.PromotionTableModel;
-import TableModel.TypeInventoryTableModel;
 import TableModel.TypeProductTableModel;
 import View.BillToPay;
 import View.ChangePassword;
@@ -90,7 +87,6 @@ public class Controller {
 	ProductDAO productDAO = new ProductDAO();
 	TypeProductDAO typeProductDAO = new TypeProductDAO();
 	PromotionDAO promotionDAO = new PromotionDAO();
-	TypeInventoryDAO typeInventoryDAO = new TypeInventoryDAO();
 	OrderDAO orderDAO = new OrderDAO();
 	BillDAO billDAO = new BillDAO();
 	private List<Order> listOrder = new ArrayList<>();
@@ -114,7 +110,6 @@ public class Controller {
 		setDataTableCustomer();
 		setDataTableEmployee();
 		setDataTablePromotion();
-		setDataTableTypeInventory();
 		setDataTableTypeProduct();
 		setDataTableBillHistory();
 		clickBillTable();
@@ -131,13 +126,7 @@ public class Controller {
 		thongke();
 	}
 
-	public void thongke() throws SQLException
-	{
-		
-
-         view.daySales.setText(""+billDAO.getSalesForDate());
-         
-	}
+	
 
 	public void clickBillTable() {
 		view.billTable.addMouseListener(new MouseAdapter() {
@@ -237,7 +226,8 @@ public class Controller {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (view.IDTypeProductTextField.getText().toString().equals(""))
+				
+				if (view.IDTypeProductTextField.getText().equals(""))
 					JOptionPane.showMessageDialog(view.Type_panel, "vui lòng chọn loại sản phẩm!!!");
 				else {
 					try {
@@ -256,8 +246,8 @@ public class Controller {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				if (view.IDProductTextField.getText().toString().equals(""))
+				System.out.println(view.IDTypeProductTextField.getText());
+				if (view.IDTypeProductTextField.getText().toString().equals(""))
 					JOptionPane.showMessageDialog(view.Type_panel, "vui lòng chọn loại sản phẩm!!!");
 				else {
 
@@ -278,7 +268,7 @@ public class Controller {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (view.IDProductTextField.getText().toString().equals(""))
-					JOptionPane.showMessageDialog(view.Type_panel, "vui lòng chọn loại sản phẩm!!!");
+					JOptionPane.showMessageDialog(view.Type_panel, "vui lòng chọn sản phẩm!!!");
 				else {
 					try {
 						productDAO.updateProduct(view.IDProductTextField.getText().toString(),
@@ -304,7 +294,7 @@ public class Controller {
 			public void actionPerformed(ActionEvent e) {
 
 				if (view.IDProductTextField.getText().toString().equals(""))
-					JOptionPane.showMessageDialog(view.Product_panel, "vui lòng chọn loại sản phẩm!!!");
+					JOptionPane.showMessageDialog(view.Product_panel, "vui lòng chọn sản phẩm!!!");
 				else {
 
 					try {
@@ -612,12 +602,6 @@ public class Controller {
 	}
 
 
-	public void setDataTableTypeInventory() throws SQLException {
-		List<TypeInventory> listTypeInventory = typeInventoryDAO.getData();
-		TypeInventoryTableModel typeInventoryTableModel = new TypeInventoryTableModel(listTypeInventory);
-		typeInventoryTableModel.fireTableDataChanged();
-		view.setDataTableTypeInventory(typeInventoryTableModel);
-	}
 
 	public void setDataTableEmployee() throws SQLException {
 		List<Employee> listEmployee = emoloyeeDAO.getData();
@@ -1156,6 +1140,11 @@ public class Controller {
 		        }
 			}
 		});
+	}
+	public void thongke() throws SQLException
+	{
+         view.daySales.setText(""+billDAO.getSalesForDate());
+         
 	}
 	public boolean isPasswordMatching(ChangePassword cp) {
 	    return cp.MKCuField.getText().equals(cp.XacNhanMKField.getText());

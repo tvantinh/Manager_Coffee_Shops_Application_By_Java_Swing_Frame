@@ -49,7 +49,6 @@ import TableModel.CustomerTableModel;
 import TableModel.EmployeeTableModel;
 import TableModel.ProductTableModel;
 import TableModel.PromotionTableModel;
-import TableModel.TypeInventoryTableModel;
 import TableModel.TypeProductTableModel;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
@@ -391,9 +390,6 @@ public class ViewMain extends JFrame {
 		typeProductTable.setModel(typeProductTableModel);
 	}
 
-	public void setDataTableTypeInventory(TypeInventoryTableModel typeInventoryTableModel) {
-		typeInventoryTable.setModel(typeInventoryTableModel);
-	}
 
 	public void setDataTableEmployee(EmployeeTableModel employeeTableModel) {
 		employeeTable.setModel(employeeTableModel);
